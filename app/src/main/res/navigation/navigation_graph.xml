@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/test"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/myPageFragment"
+        android:name="com.piooda.recycrew.ui.main.myPage.MyPageFragment"
+        android:label="fragment_my_page"
+        tools:layout="@layout/fragment_my_page" />
+    <fragment
+        android:id="@+id/tradeFragment"
+        android:name="com.piooda.recycrew.ui.main.community.trade.TradeFragment"
+        android:label="fragment_trade"
+        tools:layout="@layout/fragment_trade" />
+    <fragment
+        android:id="@+id/attendanceCheckFragment"
+        android:name="com.piooda.recycrew.ui.main.event.attendanceCheck.AttendanceCheckFragment"
+        android:label="fragment_attendance_check"
+        tools:layout="@layout/fragment_attendance_check" />
+    <fragment
+        android:id="@+id/chatFragment"
+        android:name="com.piooda.recycrew.ui.main.chat.ChatFragment"
+        android:label="fragment_chat"
+        tools:layout="@layout/fragment_chat" />
+    <fragment
+        android:id="@+id/communityFragment"
+        android:name="com.piooda.recycrew.ui.main.community.CommunityFragment"
+        android:label="fragment_community"
+        tools:layout="@layout/fragment_community">
+        <action
+            android:id="@+id/action_communityFragment_to_tradeFragment"
+            app:destination="@id/tradeFragment" />
+        <action
+            android:id="@+id/action_communityFragment_to_questionFragment"
+            app:destination="@id/questionFragment" />
+        <action
+            android:id="@+id/action_communityFragment_to_meetUpFragment"
+            app:destination="@id/meetUpFragment" />
+        <action
+            android:id="@+id/action_communityFragment_to_chatFragment"
+            app:destination="@id/chatFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/eventFragment"
+        android:name="com.piooda.recycrew.ui.main.event.EventFragment"
+        android:label="fragment_event"
+        tools:layout="@layout/fragment_event">
+        <action
+            android:id="@+id/action_eventFragment_to_attendanceCheckFragment"
+            app:destination="@id/attendanceCheckFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.piooda.recycrew.ui.main.home.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home">
+        <action
+            android:id="@+id/action_homeFragment_to_communityFragment"
+            app:destination="@id/communityFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_eventFragment"
+            app:destination="@id/eventFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_myPageFragment"
+            app:destination="@id/myPageFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/meetUpFragment"
+        android:name="com.piooda.recycrew.ui.main.community.meetup.MeetUpFragment"
+        android:label="fragment_meet_up"
+        tools:layout="@layout/fragment_meet_up" />
+    <fragment
+        android:id="@+id/questionFragment"
+        android:name="com.piooda.recycrew.ui.main.community.questions.QuestionFragment"
+        android:label="fragment_question"
+        tools:layout="@layout/fragment_question" />
+</navigation>

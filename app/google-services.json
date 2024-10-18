@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "385747213887",
+    "project_id": "recycrew-13e0d",
+    "storage_bucket": "recycrew-13e0d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:385747213887:android:8c43cfce843cbfb28d628a",
+        "android_client_info": {
+          "package_name": "com.piooda.recycrew"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCn37ESuy5gY6j048eoSJ9EYfVv-ud85Tk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
