@@ -5,17 +5,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.fragment.findNavController
-import com.piooda.recycrew.R
+import androidx.recyclerview.widget.GridLayoutManager
 import com.piooda.recycrew.base.BaseFragment
 import com.piooda.recycrew.databinding.FragmentHomeBinding
-import com.piooda.recycrew.databinding.FragmentMeetUpBinding
 
 class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::inflate) {
     companion object {
         fun newInstance() = HomeFragment()
     }
+
+    private lateinit var recyclerAdapter: RecyclerAdapter
 
     private val viewModel: HomeViewModel by viewModels()
 
@@ -25,18 +24,17 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
     ): View {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
 
-        binding.eventBtn.setOnClickListener {
-            findNavController().navigate(R.id.action_homeFragment_to_eventFragment)
-        }
+        // RecyclerView 초기화
+        recyclerAdapter = RecyclerAdapter()
+        binding.recyclerView.adapter = recyclerAdapter
+        binding.recyclerView.layoutManager = GridLayoutManager(requireContext(), 3)
 
-        binding.communityBtn.setOnClickListener {
-            findNavController().navigate(R.id.action_homeFragment_to_communityFragment)
+        // ViewModel에서 데이터 관찰
+        viewModel.imageList.observe(viewLifecycleOwner) { imageList ->
+            recyclerAdapter.submitList(imageList) // 데이터 업데이트
         }
+        viewModel.fetchImagesFromFirebase()
 
-        binding.myPageBtn.setOnClickListener {
-            findNavController().navigate(R.id.action_homeFragment_to_myPageFragment)
-        }
         return binding.root
     }
-
 }

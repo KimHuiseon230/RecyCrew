@@ -2,4 +2,78 @@
     <string name="app_name">RecyCrew</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="previous">Previous</string>
+    <!-- 공통 문자열 -->
+    <string name="text_title_greeting">안녕하세요:)</string>
+    <string name="text_username_sample">바다와 거북이</string>
+    <string name="text_timestamp_sample">2분 전</string>
+    <string name="text_location_sample">마포구</string>
+    <string name="text_comment_count_sample">1</string>
+    <!-- activity_input.xml -->
+    <string name="input_hint_category">카테고리</string>
+    <string name="input_hint_title">제목</string>
+    <string name="input_hint_detail">내용</string>
+    <string name="button_submit">입력 완료</string>
+    <string name="button_cancel">취소</string>
+    <!-- activity_login.xml-->
+    <string name="main_text">회원가입</string>
+    <string name="id">이메일</string>
+    <string name="password">비밀번호</string>
+    <string name="password_recheck">비밀번호 재확인</string>
+    <string name="name">닉네임</string>
+    <string name="next">다음</string>
+
+    <!-- activity_event.xml -->
+    <string name="event_title">이벤트</string>
+    <!-- fragment_home.xml -->
+    <string name="home_title">환영합니다!</string>
+    <string name="home_username">사용자 이름</string>
+    <string name="home_text_points">320 포인트가 모였어요</string>
+    <string name="home_text_reward">출석체크하고 리워드 받기!</string>
+    <string name="home_text_category_info">분류별 배출 방법</string>
+    <string name="home_hint_search">검색어를 입력하세요</string>
+    <!-- fragment_attendance_check.xml-->
+    <string name="attendance_text">출석</string>
+    <string name="more_text">더보기</string>
+    <string name="todays_attendance_text">오늘의 출석</string>
+    <string name="check_in_reward_text">출석 체크하고 리워드 받기!</string>
+    <!-- fragment_question.xml -->
+    <string name="question_text_talk">Recy-Talk</string>
+    <string name="question_text_talk_description">환경을 사랑하는 리사이크루들의 소통의 장! 환경에 대한 자유로운 이야기로 나눠요🍀</string>
+    <!-- fragment_meet_up.xml -->
+    <string name="meetup_text_talk">Recy-Meetup</string>
+    <string name="meetup_text_talk_description">환경에 진심인 크루들의 모임의 장! 함께 모여 플로깅을 하며 건강과 환경을 지켜요🌱</string>
+    <!-- fragment_my_page.xml -->
+    <string name="myPage_title">My</string>
+    <string name="myPage_username">@string/text_username_sample</string>
+    <string name="myPage_user_email">sample@gmail.com</string>
+    <string name="myPage_support">고객지원</string>
+    <string name="myPage_faq">자주 묻는 질문</string>
+    <string name="myPage_notice">공지사항</string>
+    <string name="myPage_terms_policy">약관 및 정책</string>
+    <string name="myPage_settings">설정</string>
+    <string name="myPage_profile_settings">프로필 설정</string>
+    <string name="myPage_notification_settings">알림 설정</string>
+    <!-- fragment_trade.xml -->
+    <string name="trade_text_title">Recy-Share</string>
+    <string name="trade_text_description">환경을 사랑하는 리사이크루들의 나눔의 장! 서로에게 필요한 제품을 나누며 환경을 지켜요💚</string>
+    <!-- item_community_post.xml -->
+    <string name="community_text_title">브랜드 추천합니다</string>
+    <string name="community_text_description">얼마 전 알게 된 브랜드가 있어서 공유하고자 합니다</string>
+    <string name="community_text_time">@string/text_timestamp_sample</string>
+    <string name="community_text_count">@string/text_comment_count_sample</string>
+    <string name="community_text_username">@string/text_username_sample</string>
+    <!-- item_meetup_post.xml -->
+    <string name="meetup_text_location">@string/text_location_sample</string>
+    <string name="meetup_text_meeting_spot">망원한강공원 근처에서 함께 플로깅 하실 분..</string>
+    <string name="meetup_text_category">플로깅</string>
+    <string name="meetup_text_participant_count">30명</string>
+    <!-- item_trade_post.xml -->
+    <string name="trade_text_post_title">토마토 가져가세요</string>
+    <string name="trade_text_post_description">친척분께 받은 토마토인데 너무 많아서요, 드실..</string>
+    <string name="trade_text_time">@string/text_timestamp_sample</string>
+    <string name="trade_text_username">@string/text_username_sample</string>
+    <string name="trade_text_location">@string/text_location_sample</string>
+    <string name="trade_text_count">@string/text_comment_count_sample</string>
 </resources>

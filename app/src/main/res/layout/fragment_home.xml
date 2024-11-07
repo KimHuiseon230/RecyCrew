@@ -1,35 +1,135 @@
-<?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.main.home.HomeFragment">
+    android:padding="15dp">
 
-    <TextView
+    <!-- 로고 이미지 -->
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/iv_logo"
+        android:layout_width="wrap_content"
+        android:layout_height="60dp"
+        android:background="@drawable/ic_logo"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- 프로필 이미지와 사용자 정보 텍스트 그룹 -->
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/iv_profile"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginTop="16dp"
+        android:src="@drawable/img"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_points"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/iv_logo" />
+
+    <!-- 텍스트를 위한 FlowLayout -->
+
+    <androidx.constraintlayout.helper.widget.Flow
+        android:id="@+id/flow_texts"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:orientation="vertical"
+        app:constraint_referenced_ids="tv_greeting,tv_username,tv_points"
+        app:flow_horizontalAlign="start"
+        app:flow_verticalAlign="top"
+        app:flow_verticalGap="4dp"
+        app:layout_constraintBottom_toBottomOf="@id/iv_profile"
+        app:layout_constraintStart_toEndOf="@id/iv_profile"
+        app:layout_constraintTop_toTopOf="@id/iv_profile"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tv_greeting"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="안녕하세요 :)"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tv_username"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="바다거북이님!"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tv_points"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="320 포인트가 모였어요!"
+        android:textColor="@color/gray"
+        android:textSize="14sp" />
+
+    <!-- 리워드 버튼 -->
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_reward"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="28dp"
+        android:background="@drawable/bubble"
+        android:text="출석체크하고 리워드 받기!"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_points" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tv_category_info"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="HomeFragment" />
-
-
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/communityBtn"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="community" />
+        android:layout_marginTop="10dp"
+        android:padding="5dp"
+        android:text="  분류별 배출 방법"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btn_reward" />
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/eventBtn"
-        android:layout_width="wrap_content"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/search_view"
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center|left"
-        android:text="event" />
+        android:layout_marginTop="10dp"
+        app:endIconDrawable="@drawable/ic_baseline_search_24"
+        app:endIconMode="custom"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_category_info">
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/myPageBtn"
-        android:layout_width="wrap_content"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/TextInputEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="검색어를 입력해주세요"
+            android:inputType="text" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center|right"
-        android:text="myPage" />
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/search_view"
+        app:layout_constraintVertical_bias="0.116" />
 
-</FrameLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
+

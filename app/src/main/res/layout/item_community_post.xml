@@ -1,0 +1,98 @@
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/itemQuestionPost"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <!-- 이미지 영역 -->
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/imgUserProfile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="5dp"
+        android:src="@drawable/img_sample0"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- 콘텐츠 영역 Flow -->
+    <androidx.constraintlayout.helper.widget.Flow
+        android:id="@+id/flowContent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:constraint_referenced_ids="tvTitle,tvDescription,flowInfo,flowActions"
+        app:flow_horizontalAlign="start"
+        app:flow_verticalAlign="baseline"
+        app:flow_wrapMode="none"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.1"
+        app:layout_constraintStart_toEndOf="@+id/imgUserProfile"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <!-- 제목과 설명 텍스트 -->
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tvTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-medium"
+        android:text="@string/community_text_title"
+        android:textColor="@android:color/black"
+        android:textStyle="bold" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tvDescription"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/community_text_description" />
+
+    <!-- 시간과 작성자 정보 -->
+    <androidx.constraintlayout.helper.widget.Flow
+        android:id="@+id/flowInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="tvTime,tvAuthor"
+        app:flow_horizontalGap="8dp"
+        app:flow_wrapMode="none" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tvTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/community_text_time" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tvAuthor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/community_text_username" />
+
+    <!-- 댓글과 좋아요 개수 -->
+    <androidx.constraintlayout.helper.widget.Flow
+        android:id="@+id/flowActions"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="tvCommentCount,tvLikeCount"
+        app:flow_horizontalGap="8dp"
+        app:flow_wrapMode="none" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tvCommentCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawableLeft="@drawable/ic_baseline_comment_24"
+        android:drawablePadding="4dp"
+        android:text="@string/community_text_count"
+        android:textColor="@color/Primary_Color" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tvLikeCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:drawableLeft="@drawable/ic_baseline_favorite_24"
+        android:text="@string/community_text_count"
+        android:textColor="@color/red" />
+</androidx.constraintlayout.widget.ConstraintLayout>
