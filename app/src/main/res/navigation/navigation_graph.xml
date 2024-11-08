@@ -77,4 +77,9 @@
         android:name="com.piooda.recycrew.ui.main.community.questions.QuestionFragment"
         android:label="fragment_question"
         tools:layout="@layout/fragment_question" />
+    <action
+        android:id="@+id/action_questionFragment_to_inputScreen"
+        app:destination="@id/inputScreen"
+        tools:layout="@layout/activity_input" />
 </navigation>
+

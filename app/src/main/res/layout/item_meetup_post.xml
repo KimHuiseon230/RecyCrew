@@ -1,0 +1,78 @@
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/itemMeetupPost"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <!-- 프로필 이미지 -->
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/imgUserProfile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="5dp"
+        android:src="@drawable/img_sample2"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Meetup 정보 Flow -->
+    <androidx.constraintlayout.helper.widget.Flow
+        android:id="@+id/flowContent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:constraint_referenced_ids="tvTitle,tvDescription,flowTags"
+        app:flow_horizontalAlign="start"
+        app:flow_horizontalGap="4dp"
+        app:flow_verticalAlign="baseline"
+        app:flow_wrapMode="none"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.1"
+        app:layout_constraintStart_toEndOf="@+id/imgUserProfile"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Meetup 제목 -->
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tvTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-medium"
+        android:text="@string/meetup_text_meeting_spot"
+        android:textColor="@android:color/black"
+        android:textStyle="bold" />
+
+    <!-- Meetup 설명 -->
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tvDescription"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/meetup_text_category" />
+
+    <!-- 태그 및 참가자 수 -->
+    <androidx.constraintlayout.helper.widget.Flow
+        android:id="@+id/flowTags"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="tvLocation,tvActivityType,tvParticipantCount"
+        app:flow_horizontalGap="8dp"
+        app:flow_wrapMode="none" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tvLocation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/meetup_text_location" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tvActivityType"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/meetup_text_category" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tvParticipantCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/meetup_text_participant_count" />
+</androidx.constraintlayout.widget.ConstraintLayout>

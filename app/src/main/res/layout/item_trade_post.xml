@@ -1,0 +1,104 @@
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/itemTradePost"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <!-- 사용자 이미지 -->
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/imgUserProfile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="5dp"
+        android:src="@drawable/img_sample1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- 게시물 정보 Flow -->
+    <androidx.constraintlayout.helper.widget.Flow
+        android:id="@+id/flowPostContent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:constraint_referenced_ids="tvTitle,tvDescription,flowMetadata,flowInteraction"
+        app:flow_horizontalAlign="start"
+        app:flow_verticalAlign="baseline"
+        app:flow_wrapMode="none"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.1"
+        app:layout_constraintStart_toEndOf="@+id/imgUserProfile"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- 게시물 제목 -->
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tvTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-medium"
+        android:text="@string/trade_text_post_title"
+        android:textColor="@android:color/black"
+        android:textStyle="bold" />
+
+    <!-- 게시물 설명 -->
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tvDescription"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/trade_text_post_description" />
+
+    <!-- 게시물 메타데이터 -->
+    <androidx.constraintlayout.helper.widget.Flow
+        android:id="@+id/flowMetadata"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="tvTimeAgo,tvUserName,tvLocation"
+        app:flow_horizontalGap="8dp"
+        app:flow_wrapMode="none" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tvTimeAgo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/trade_text_time" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tvUserName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/trade_text_username" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tvLocation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/trade_text_location" />
+
+    <!-- 상호작용 정보 (댓글 및 좋아요) -->
+    <androidx.constraintlayout.helper.widget.Flow
+        android:id="@+id/flowInteraction"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="tvComments,tvLikes"
+        app:flow_horizontalGap="8dp"
+        app:flow_wrapMode="none" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tvComments"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawableLeft="@drawable/ic_baseline_comment_24"
+        android:drawablePadding="4dp"
+        android:text="@string/trade_text_count"
+        android:textColor="@color/Primary_Color" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tvLikes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:drawableLeft="@drawable/ic_baseline_favorite_24"
+        android:text="@string/trade_text_count"
+        android:textColor="@color/red" />
+</androidx.constraintlayout.widget.ConstraintLayout>
