@@ -72,6 +72,7 @@ dependencies {
     implementation(libs.firebase.auth)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.runtime.livedata)
+    implementation(project(":app:data"))
     androidTestImplementation(platform(libs.androidx.compose.bom))
 
     implementation(libs.ui)
