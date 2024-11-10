@@ -4,16 +4,13 @@ import android.util.Log
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
-import com.piooda.domain.datasource.ImageDataSource
 import com.piooda.domain.model.ImageData
 import com.piooda.domain.repository.ImageRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 
-class ImageRepositoryImpl(
-    private val imageDataSource: ImageDataSource
-) : ImageRepository {
+class ImageRepositoryImpl: ImageRepository {
     private val db = FirebaseFirestore.getInstance()
     private val storageRef = FirebaseStorage.getInstance().reference
 

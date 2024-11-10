@@ -2,7 +2,6 @@ package com.piooda.recycrew.core_ui.base
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.piooda.domain.datasourceImpl.ImageDataSourceImpl
 import com.piooda.domain.repositoryImpl.ImageRepositoryImpl
 import com.piooda.recycrew.feature.home.ImageViewModel
 
@@ -12,7 +11,7 @@ val ViewModelFactory = object : ViewModelProvider.Factory {
         with(modelClass) {
             when {
                 isAssignableFrom(ImageViewModel::class.java) ->
-                    ImageViewModel(ImageRepositoryImpl(ImageDataSourceImpl()))
+                    ImageViewModel(ImageRepositoryImpl())
 
                 else ->
                     throw IllegalArgumentException("Unknown ViewModel Class: ${modelClass.name}")
