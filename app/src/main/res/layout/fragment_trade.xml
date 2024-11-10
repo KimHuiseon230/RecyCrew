@@ -5,7 +5,7 @@
     android:id="@+id/fragment_event"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.main.community.CommunityFragment">
+    tools:context=".feature.community.CommunityFragment">
 
     <TextView
         android:id="@+id/titleTextView"

@@ -64,29 +64,15 @@ dependencies {
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
     implementation(libs.androidx.legacy.support.v4)
-    implementation(libs.androidx.lifecycle.livedata.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.fragment.ktx)
-    implementation(libs.firebase.auth.ktx)
     implementation(libs.transport.runtime)
-    implementation(libs.firebase.auth)
-    implementation(libs.androidx.navigation.compose)
-    implementation(libs.androidx.runtime.livedata)
-    androidTestImplementation(platform(libs.androidx.compose.bom))
+    implementation(project(":app:data"))
 
-    implementation(libs.ui)
-    implementation(libs.ui.tooling)
-    implementation(libs.ui.tooling.preview)
-    implementation(libs.ui.graphics)
-
-    implementation(libs.material3)
-    implementation(libs.androidx.material3.adaptive.navigation.suite)
     implementation(libs.androidx.constraintlayout.compose)
     implementation(libs.androidx.activity.compose)
-    implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
-    implementation(libs.androidx.runtime.livedata)
     implementation(libs.hilt.android)
     implementation(libs.androidx.hilt.lifecycle.viewmodel)
 
@@ -98,10 +84,6 @@ dependencies {
 
     implementation(platform(libs.firebase.bom))
     implementation(libs.google.firebase.firestore)
-
-    implementation(libs.androidx.navigation.fragment.ktx.v280)
-    implementation(libs.androidx.navigation.ui.ktx.v280)
-    implementation(platform(libs.firebase.bom.v3271))
 
     implementation(libs.glide)
 }
