@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlin.coroutines.cancellation.CancellationException
 
-class ImageViewModel(
+class RecyclingCategoriesImageViewModel(
     private var repository: ImageRepositoryImpl,
 ) : ViewModel() {
 
@@ -20,18 +20,18 @@ class ImageViewModel(
     fun loadImageData() {
         viewModelScope.launch {
             try {
-                Log.d("ImageViewModel", "Starting to fetch image data")
+                Log.d("RecyclingCategoriesImageViewModel", "Starting to fetch image data")
                 repository.fetchImageData()
                     .onSuccess {
-                        Log.d("ImageViewModel", "Successfully fetched image data")
+                        Log.d("RecyclingCategoriesImageViewModel", "Successfully fetched image data")
                         _imageData.emit(it)
                     }.onFailure { error ->
-                        Log.e("ImageViewModel", "Failed to fetch image data", error)
+                        Log.e("RecyclingCategoriesImageViewModel", "Failed to fetch image data", error)
                     }
             } catch (e: CancellationException) {
-                Log.e("ImageViewModel", "Job was cancelled", e)
+                Log.e("RecyclingCategoriesImageViewModel", "Job was cancelled", e)
             } catch (e: Exception) {
-                Log.e("ImageViewModel", "Unexpected error occurred", e)
+                Log.e("RecyclingCategoriesImageViewModel", "Unexpected error occurred", e)
             }
         }
     }
