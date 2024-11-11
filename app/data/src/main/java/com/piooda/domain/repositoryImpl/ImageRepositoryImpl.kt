@@ -10,9 +10,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 
-class ImageRepositoryImpl: ImageRepository {
-    private val db = FirebaseFirestore.getInstance()
-    private val storageRef = FirebaseStorage.getInstance().reference
+class ImageRepositoryImpl(
+    private val db:FirebaseFirestore,
+    private val firebaseStorage : FirebaseStorage
+): ImageRepository {
+    private val storageRef = firebaseStorage.getReference()
 
     override suspend fun fetchImageData(): Result<List<ImageData>> = runCatching {
         withContext(Dispatchers.IO) {
