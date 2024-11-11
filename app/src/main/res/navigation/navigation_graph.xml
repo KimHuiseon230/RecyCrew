@@ -66,6 +66,13 @@
         <action
             android:id="@+id/action_homeFragment_to_myPageFragment"
             app:destination="@id/myPageFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_recyclingCategoriesFragment"
+            app:destination="@id/recyclingCategoriesFragment">
+            <argument
+                android:name="imageUrl"
+                app:argType="string" />
+        </action>
     </fragment>
     <fragment
         android:id="@+id/meetUpFragment"
@@ -81,5 +88,9 @@
         android:id="@+id/action_questionFragment_to_inputScreen"
         app:destination="@id/inputScreen"
         tools:layout="@layout/activity_input" />
+    <fragment
+        android:id="@+id/recyclingCategoriesFragment"
+        android:name="com.piooda.recycrew.feature.home.RecyclingCategoriesFragment"
+        android:label="RecyclingCategoriesFragment" />
 </navigation>
 
