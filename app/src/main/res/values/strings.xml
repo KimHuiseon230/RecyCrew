@@ -76,4 +76,8 @@
     <string name="trade_text_username">@string/text_username_sample</string>
     <string name="trade_text_location">@string/text_location_sample</string>
     <string name="trade_text_count">@string/text_comment_count_sample</string>
+
+    <string name="back_arrow">뒤로 가기</string>
+    <string name="image_placeholder">이미지 자리 표시자</string>
+    <string name="send_button">보내기 버튼</string>
 </resources>
