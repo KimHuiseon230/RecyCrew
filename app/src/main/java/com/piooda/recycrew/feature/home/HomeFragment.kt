@@ -8,15 +8,15 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import com.piooda.domain.model.ImageData
+import com.piooda.domain.model.DetailedImageData
 import com.piooda.recycrew.core_ui.base.BaseFragment
 import com.piooda.recycrew.core_ui.base.ViewModelFactory
 import com.piooda.recycrew.databinding.FragmentHomeBinding
 import kotlinx.coroutines.launch
 
 class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::inflate) {
-    private lateinit var recyclingCategoriesAdapter: RecyclingCategoriesAdapter
-    private val viewModel by viewModels<RecyclingCategoriesImageViewModel> {
+    private lateinit var categoriesBasicImages: CategoriesBasicImages
+    private val viewModel by viewModels<CategoriesBasicImagesViewModel> {
         ViewModelFactory
     }
 
@@ -27,14 +27,14 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
 
         // RecyclerView 초기화
-        recyclingCategoriesAdapter = RecyclingCategoriesAdapter { item -> onItemClicked(item) }
-        binding.recyclerView.adapter = recyclingCategoriesAdapter
+        categoriesBasicImages = CategoriesBasicImages { item -> onItemClicked(item) }
+        binding.recyclerView.adapter = categoriesBasicImages
 
         binding.recyclerView.layoutManager = GridLayoutManager(requireContext(), 3)
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.imageData.collect { result ->
-                recyclingCategoriesAdapter.submitList(result)
+                categoriesBasicImages.submitList(result)
             }
         }
 
@@ -42,8 +42,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
 
         return binding.root
     }
-    private fun onItemClicked(item: ImageData) {
-        val action = HomeFragmentDirections.actionHomeFragmentToRecyclingCategoriesFragment(item.imageUrl)
+    private fun onItemClicked(item: DetailedImageData) {
+        val action = HomeFragmentDirections.actionHomeFragmentToCategoriesDetailedImagesFragment(item)
         findNavController().navigate(action)
     }
 }
