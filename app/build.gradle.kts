@@ -4,7 +4,6 @@ plugins {
     alias(libs.plugins.google.services)
     alias(libs.plugins.org.jetbrains.kotlin.kapt)
     alias(libs.plugins.androidx.navigation.safe.args)
-
 }
 
 android {
@@ -50,8 +49,6 @@ android {
     buildFeatures {
         viewBinding = true
         buildConfig = true
-        compose = true
-        dataBinding = true
     }
 }
 
@@ -87,4 +84,5 @@ dependencies {
     implementation(libs.google.firebase.firestore)
 
     implementation(libs.glide)
+
 }

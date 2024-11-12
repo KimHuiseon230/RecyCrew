@@ -25,11 +25,12 @@ lifecycleViewmodelKtx = "2.8.6"
 fragmentKtx = "1.8.4"
 transportRuntime = "4.0.0"
 storage = "1.5.0"
-firestore="25.1.1"
+firestore = "25.1.1"
 firebaseStorageKtx = "21.0.1"
 org-jetbrains-kotlin-android = "1.9.0"
 jetbrainsKotlinJvm = "1.9.24"
 androidxNavigationSafeargsGradlePlugin = "2.7.7"
+parcelize = "1.8.10"
 
 [libraries]
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activityCompose" }
@@ -65,6 +66,8 @@ google-services = { id = "com.google.gms.google-services", version.ref = "google
 android-library = { id = "com.android.library", version.ref = "agp" }
 org-jetbrains-kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "org-jetbrains-kotlin-android" }
 jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "jetbrainsKotlinJvm" }
-androidx-navigation-safe-args = { id ="androidx.navigation.safeargs.kotlin",version.ref ="androidxNavigationSafeargsGradlePlugin" }
+androidx-navigation-safe-args = { id = "androidx.navigation.safeargs.kotlin", version.ref = "androidxNavigationSafeargsGradlePlugin" }
+kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "parcelize" }
+
 
 
