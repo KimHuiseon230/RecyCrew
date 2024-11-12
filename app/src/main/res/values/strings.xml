@@ -76,8 +76,12 @@
     <string name="trade_text_username">@string/text_username_sample</string>
     <string name="trade_text_location">@string/text_location_sample</string>
     <string name="trade_text_count">@string/text_comment_count_sample</string>
-
-    <string name="back_arrow">뒤로 가기</string>
-    <string name="image_placeholder">이미지 자리 표시자</string>
-    <string name="send_button">보내기 버튼</string>
+    <!-- fragment_recycling_categories.xml-->
+    <string name="title_text">분리수거 품목명</string>
+    <string name="category_label">품목</string>
+    <string name="category_text">골판지류</string>
+    <string name="subcategory_label">세부품목</string>
+    <string name="subcategory_text">골판지 상자</string>
+    <string name="excluded_items_label">비해당 품목</string>
+    <string name="excluded_items_text">택배용 보낸 상자류 등 내부에 알루미늄박+비닐 등이 부착되어 종이와 분리되지 않는 상자류</string>
 </resources>

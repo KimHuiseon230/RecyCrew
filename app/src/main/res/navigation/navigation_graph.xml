@@ -67,11 +67,11 @@
             android:id="@+id/action_homeFragment_to_myPageFragment"
             app:destination="@id/myPageFragment" />
         <action
-            android:id="@+id/action_homeFragment_to_recyclingCategoriesFragment"
-            app:destination="@id/recyclingCategoriesFragment">
+            android:id="@+id/action_homeFragment_to_categoriesDetailedImagesFragment"
+            app:destination="@id/categoriesDetailedImagesFragment">
             <argument
-                android:name="imageUrl"
-                app:argType="string" />
+                android:name="detailedImageData"
+                app:argType="com.piooda.domain.model.DetailedImageData" />
         </action>
     </fragment>
     <fragment
@@ -89,8 +89,13 @@
         app:destination="@id/inputScreen"
         tools:layout="@layout/activity_input" />
     <fragment
-        android:id="@+id/recyclingCategoriesFragment"
-        android:name="com.piooda.recycrew.feature.home.RecyclingCategoriesFragment"
-        android:label="RecyclingCategoriesFragment" />
+        android:id="@+id/categoriesDetailedImagesFragment"
+        android:name="com.piooda.recycrew.feature.home.CategoriesDetailedImagesFragment"
+        tools:layout="@layout/fragment_categories_detailed_images">
+
+        <argument
+            android:name="detailedImageData"
+            app:argType="com.piooda.domain.model.DetailedImageData" />
+    </fragment>
 </navigation>
 
