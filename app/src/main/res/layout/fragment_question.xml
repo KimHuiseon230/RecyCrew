@@ -42,6 +42,15 @@
         app:layout_constraintVertical_bias="0.5"
         tools:listitem="@layout/item_community_post" />
 
+    <android.widget.ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/floatingButton"
@@ -55,4 +64,3 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:tint="@color/white" />
 </androidx.constraintlayout.widget.ConstraintLayout>
-

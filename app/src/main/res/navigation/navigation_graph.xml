@@ -31,6 +31,9 @@
         android:label="fragment_community"
         tools:layout="@layout/fragment_community">
         <action
+            android:id="@+id/action_questionFragment_to_questionDetailFragment"
+            app:destination="@id/questionDetailFragment" />
+        <action
             android:id="@+id/action_communityFragment_to_tradeFragment"
             app:destination="@id/tradeFragment" />
         <action
@@ -83,7 +86,14 @@
         android:id="@+id/questionFragment"
         android:name="com.piooda.recycrew.feature.community.question.QuestionFragment"
         android:label="fragment_question"
-        tools:layout="@layout/fragment_question" />
+        tools:layout="@layout/fragment_question" >
+        <action
+            android:id="@+id/action_questionFragment_to_questionDetailFragment"
+            app:destination="@id/questionDetailFragment" />
+        <argument
+            android:name="detailedQuestData"
+            app:argType="com.piooda.domain.model.PostData" />
+    </fragment>
     <action
         android:id="@+id/action_questionFragment_to_inputScreen"
         app:destination="@id/inputScreen"
@@ -96,6 +106,15 @@
         <argument
             android:name="detailedImageData"
             app:argType="com.piooda.domain.model.DetailedImageData" />
+    </fragment>
+    <fragment
+        android:id="@+id/questionDetailFragment"
+        android:name="com.piooda.recycrew.feature.community.question.QuestionDetailFragment"
+        android:label="fragment_question_detail"
+        tools:layout="@layout/fragment_question_detail">
+        <argument
+            android:name="detailedQuestData"
+            app:argType="com.piooda.domain.model.PostData" />
     </fragment>
 </navigation>
 

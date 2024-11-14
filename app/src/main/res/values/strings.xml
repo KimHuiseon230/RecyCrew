@@ -84,4 +84,14 @@
     <string name="subcategory_text">골판지 상자</string>
     <string name="excluded_items_label">비해당 품목</string>
     <string name="excluded_items_text">택배용 보낸 상자류 등 내부에 알루미늄박+비닐 등이 부착되어 종이와 분리되지 않는 상자류</string>
+
+    <string name="back_button_description">Back</string>
+    <string name="post_title">게시글 제목</string>
+    <string name="post_image">Post Image</string>
+    <string name="post_content">게시글 내용</string>
+    <string name="comments_label">댓글</string>
+    <string name="comment_nickname">닉네임</string>
+    <string name="comment_content">댓글내용</string>
+    <string name="comment_hint">댓글을 입력하세요</string>
+    <string name="send_button">Send</string>
 </resources>
