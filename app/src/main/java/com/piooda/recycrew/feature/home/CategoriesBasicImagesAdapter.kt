@@ -9,8 +9,8 @@ import com.bumptech.glide.Glide
 import com.piooda.domain.model.DetailedImageData
 import com.piooda.recycrew.databinding.ItemCategoriesBasicImageBinding
 
-class CategoriesBasicImages(private val onClick: (DetailedImageData) -> Unit) :
-    ListAdapter<DetailedImageData, CategoriesBasicImages.ViewHolder>(DiffCallback()) {
+class CategoriesBasicImagesAdapter(private val onClick: (DetailedImageData) -> Unit) :
+    ListAdapter<DetailedImageData, CategoriesBasicImagesAdapter.ViewHolder>(DiffCallback()) {
 
     class ViewHolder(
         private val binding: ItemCategoriesBasicImageBinding,

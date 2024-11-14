@@ -15,7 +15,7 @@ import com.piooda.recycrew.databinding.FragmentHomeBinding
 import kotlinx.coroutines.launch
 
 class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::inflate) {
-    private lateinit var categoriesBasicImages: CategoriesBasicImages
+    private lateinit var categoriesBasicImagesAdapter: CategoriesBasicImagesAdapter
     private val viewModel by viewModels<CategoriesBasicImagesViewModel> {
         ViewModelFactory
     }
@@ -27,14 +27,14 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
 
         // RecyclerView 초기화
-        categoriesBasicImages = CategoriesBasicImages { item -> onItemClicked(item) }
-        binding.recyclerView.adapter = categoriesBasicImages
+        categoriesBasicImagesAdapter = CategoriesBasicImagesAdapter { item -> onItemClicked(item) }
+        binding.recyclerView.adapter = categoriesBasicImagesAdapter
 
         binding.recyclerView.layoutManager = GridLayoutManager(requireContext(), 3)
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.imageData.collect { result ->
-                categoriesBasicImages.submitList(result)
+                categoriesBasicImagesAdapter.submitList(result)
             }
         }
 
