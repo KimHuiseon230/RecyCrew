@@ -19,3 +19,5 @@ data class PostData(
     val comments: List<Comment> = emptyList()
 ) : Parcelable
 
+
+

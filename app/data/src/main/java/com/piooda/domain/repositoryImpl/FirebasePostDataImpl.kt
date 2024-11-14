@@ -14,9 +14,7 @@ class PostDataRepositoryImpl(
     private val db: FirebaseFirestore,
     private val firebaseStorage: FirebaseStorage,
 ) : PostDataRepository {
-
     private val postsCollection = db.collection("content")
-    val commentRef = db.collection("content").document("postId").collection("comments")
     private val storageRef = firebaseStorage.reference
 
     override suspend fun createPost(postData: PostData): Result<List<PostData>> {
@@ -31,8 +29,9 @@ class PostDataRepositoryImpl(
 
     override suspend fun addCommentToPost(postId: String, comment: Comment): Boolean {
         return try {
-            // postId를 사용해 commentsCollection을 참조
             val commentsCollection = postsCollection.document(postId).collection("comments")
+
+            // postId를 사용해 commentsCollection을 참조
             commentsCollection.add(comment).await()
             true
         } catch (e: Exception) {
@@ -43,24 +42,26 @@ class PostDataRepositoryImpl(
 
     override suspend fun getComments(postId: String): Result<List<Comment>> {
         return try {
-            Log.d("getComments", "Fetching comments for postId: $postId")
+            Log.d("getComments", "게시물의 아이디: $postId")
 
-            // 포스트의 comments 서브컬렉션을 가져옴
+            // content 컬렉션 -> postId 문서 -> comments 서브컬렉션으로 접근
             val commentSnapshots = postsCollection
-                .document(postId) // 포스트 문서 참조
-                .collection("comments") // 'comments' 서브컬렉션 참조
+                .document(postId)       // 해당 postId 문서를 참조
+                .collection("comments") // comments 서브컬렉션을 참조
                 .get()
                 .await()
 
             if (commentSnapshots.isEmpty) {
-                Log.d("getComments", "No comments found for postId: $postId")
+                Log.d("getComments", "댓글이 비워져 있습니다.")
                 return Result.success(emptyList())
             }
 
             // 댓글을 Comment 객체로 변환하여 리스트로 반환
             val commentsList = commentSnapshots.documents.mapNotNull { document ->
                 document.toObject(Comment::class.java)
+
             }
+            Log.d("getComments", "commentsList: $commentsList")
 
             Result.success(commentsList)
         } catch (e: Exception) {
@@ -68,6 +69,7 @@ class PostDataRepositoryImpl(
             Result.failure(e)
         }
     }
+
 
     override suspend fun getPostById(postId: String): PostData {
         Log.d("getPostById", "Fetching post with ID: $postId")

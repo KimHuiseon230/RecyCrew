@@ -6,19 +6,19 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.piooda.domain.model.ImageData
-import com.piooda.recycrew.databinding.ItemRecyclerViewBinding
+import com.piooda.domain.model.DetailedImageData
+import com.piooda.recycrew.databinding.ItemCategoriesBasicImageBinding
 
-class RecyclingCategoriesAdapter(private val onClick: (ImageData) -> Unit) :
-    ListAdapter<ImageData, RecyclingCategoriesAdapter.ViewHolder>(
+class RecyclingCategoriesAdapter(private val onClick: (DetailedImageData) -> Unit) :
+    ListAdapter<DetailedImageData, RecyclingCategoriesAdapter.ViewHolder>(
         DiffCallback()
     ) {
 
     class ViewHolder(
-        private val binding: ItemRecyclerViewBinding,
-        private val onClick: (ImageData) -> Unit,
+        private val binding: ItemCategoriesBasicImageBinding,
+        private val onClick: (DetailedImageData) -> Unit,
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: ImageData) {
+        fun bind(item: DetailedImageData) {
             with(binding) {
                 textViewTitle.text = item.title
                 Glide.with(binding.root.context)
@@ -32,7 +32,7 @@ class RecyclingCategoriesAdapter(private val onClick: (ImageData) -> Unit) :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding =
-            ItemRecyclerViewBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            ItemCategoriesBasicImageBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding, onClick)
     }
 
@@ -40,12 +40,12 @@ class RecyclingCategoriesAdapter(private val onClick: (ImageData) -> Unit) :
         holder.bind(getItem(position))
     }
 
-    class DiffCallback : DiffUtil.ItemCallback<ImageData>() {
-        override fun areItemsTheSame(oldItem: ImageData, newItem: ImageData): Boolean {
+    class DiffCallback : DiffUtil.ItemCallback<DetailedImageData>() {
+        override fun areItemsTheSame(oldItem: DetailedImageData, newItem: DetailedImageData): Boolean {
             return oldItem.imageUrl == newItem.imageUrl // or another unique property
         }
 
-        override fun areContentsTheSame(oldItem: ImageData, newItem: ImageData): Boolean {
+        override fun areContentsTheSame(oldItem: DetailedImageData, newItem: DetailedImageData): Boolean {
             return oldItem == newItem
         }
     }

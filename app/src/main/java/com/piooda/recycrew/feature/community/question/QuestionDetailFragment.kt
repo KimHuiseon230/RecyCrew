@@ -28,11 +28,13 @@ class QuestionDetailFragment :
     private val args: QuestionFragmentArgs by navArgs()
     private val detailedPostData: PostData by lazy {
         args.detailedQuestData
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.commentFiled
+
         viewModel.loadData(detailedPostData)
         viewModel.getPostById(detailedPostData) // 수정된 부분
 
