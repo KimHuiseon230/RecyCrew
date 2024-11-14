@@ -73,6 +73,8 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.hilt.android)
     implementation(libs.androidx.hilt.lifecycle.viewmodel)
+    implementation(libs.androidx.recyclerview)
+
 
     implementation(libs.androidx.storage)
     implementation(libs.firebase.storage.ktx)
