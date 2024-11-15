@@ -13,8 +13,11 @@
     <!-- activity_input.xml -->
     <string name="input_hint_category">카테고리</string>
     <string name="input_hint_title">제목</string>
-    <string name="input_hint_detail">내용</string>
-    <string name="button_submit">입력 완료</string>
+    <string name="input_hint_detail">상세 내용</string>
+    <!-- 버튼 텍스트 -->
+    <string name="button_select_image">이미지 선택</string>
+    <string name="button_submit">제출</string>
+    <string name="image_preview_desc">미리보기 이미지</string>
     <string name="button_cancel">취소</string>
     <!-- activity_login.xml-->
     <string name="main_text">회원가입</string>
