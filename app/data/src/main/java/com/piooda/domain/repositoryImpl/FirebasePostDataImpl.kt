@@ -17,11 +17,23 @@ class PostDataRepositoryImpl(
     private val postsCollection = db.collection("content")
     private val storageRef = firebaseStorage.reference
 
-    override suspend fun createPost(postData: PostData): Result<List<PostData>> {
+
+    override suspend fun createPost(postData: PostData): Result<PostData> {
         return try {
-            postsCollection.add(postData).await()
-            val allPosts = getAllPosts().getOrNull() ?: emptyList()
-            Result.success(allPosts)
+            // Firestore에 게시물 데이터 추가
+            val postRef = postsCollection.add(postData).await()
+
+            // 게시글 하위에 빈 'comments' 컬렉션 생성
+            val postId = postRef.id  // 생성된 게시물의 ID
+
+            // Firestore에 하위 'comments' 컬렉션을 빈 문서로 초기화
+            val commentsCollection = postsCollection.document(postId).collection("comments")
+            commentsCollection.add(hashMapOf<String, Any>())
+
+            // 결과로 새로운 게시물 반환
+            val createdPost = postData.copy(postId = postId)
+            Result.success(createdPost)
+
         } catch (e: Exception) {
             Result.failure(e)
         }

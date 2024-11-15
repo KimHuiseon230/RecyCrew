@@ -15,24 +15,48 @@ class QuestionDetailsViewModel(private val repository: PostDataRepository) : Vie
     private val _q_postData = MutableStateFlow<List<PostData>>(emptyList())
     val q_postData: StateFlow<List<PostData>> get() = _q_postData
 
+    // 게시물 목록을 불러오는 메서드
     fun loadData(postData: PostData) {
         viewModelScope.launch {
             try {
                 Log.d("QuestionDetailsViewModel", "Starting to fetch post data")
+
+                // 모든 게시물 가져오기
                 val result = repository.getAllPosts()
+
+                // 결과 처리
                 result.onSuccess { postList ->
                     Log.d("QuestionDetailsViewModel", "Successfully fetched post data")
-                    _q_postData.value = listOf(postData)
+                    _q_postData.value = postList // 게시물 목록을 StateFlow에 저장
                 }.onFailure { error ->
                     Log.e("QuestionDetailsViewModel", "Failed to fetch post data", error)
                 }
+
+
             } catch (e: CancellationException) {
                 Log.e("QuestionDetailsViewModel", "Job was cancelled", e)
             } catch (e: Exception) {
                 Log.e("QuestionDetailsViewModel", "Unexpected error occurred", e)
             }
         }
+    }
 
+    fun createPost(postData: PostData) {
+        viewModelScope.launch {
+            try {
+                Log.d("QuestionDetailsViewModel", "Creating post")
+                val result = repository.createPost(postData)
+
+                result.onSuccess { createdPost ->
+                    Log.d("QuestionDetailsViewModel", "Successfully created post: ${createdPost.title}")
+                    _q_postData.value = _q_postData.value + createdPost  // 새 게시물 추가 후 UI 갱신
+                }.onFailure { error ->
+                    Log.e("QuestionDetailsViewModel", "Failed to create post", error)
+                }
+            } catch (e: Exception) {
+                Log.e("QuestionDetailsViewModel", "Unexpected error occurred", e)
+            }
+        }
     }
 
     fun getPostById(postData: PostData) {
@@ -47,3 +71,4 @@ class QuestionDetailsViewModel(private val repository: PostDataRepository) : Vie
         }
     }
 }
+

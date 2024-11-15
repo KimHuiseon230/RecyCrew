@@ -1,5 +1,6 @@
 package com.piooda.recycrew.feature.community.question
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -13,6 +14,7 @@ import com.piooda.domain.model.PostData
 import com.piooda.recycrew.core_ui.base.BaseFragment
 import com.piooda.recycrew.core_ui.base.ViewModelFactory
 import com.piooda.recycrew.databinding.FragmentQuestionBinding
+import com.piooda.recycrew.feature.auth.InputActivity
 import com.piooda.recycrew.feature.community.question.adapter.QuestionRecyclerAdapter
 import kotlinx.coroutines.launch
 
@@ -36,6 +38,12 @@ class QuestionFragment : BaseFragment<FragmentQuestionBinding>(FragmentQuestionB
         // ProgressBar를 위한 변수
         val progressBar = binding.progressBar
         progressBar.visibility = View.GONE
+
+        binding.floatingButton.setOnClickListener {
+            // InputActivity로 이동
+            val intent = Intent(requireActivity(), InputActivity::class.java)
+            startActivity(intent)
+        }
 
         viewLifecycleOwner.lifecycleScope.launch {
             try {

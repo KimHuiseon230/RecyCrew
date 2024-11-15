@@ -5,11 +5,11 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class PostData(
+    val postId: String = "",
+    val userId: String = "",
     val title: String = "",
     val content: String = "",
     val imagePath: String = "",
-    val postId: String = "",
-    val userId: String = "",
     val userName: String = "",
     val category: String = "",
     val commentCount: Int = 0,
