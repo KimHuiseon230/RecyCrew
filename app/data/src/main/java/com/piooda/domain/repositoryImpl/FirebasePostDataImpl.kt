@@ -35,44 +35,42 @@ class PostDataRepositoryImpl(
             commentsCollection.add(comment).await()
             true
         } catch (e: Exception) {
-            Log.e("addCommentToPost", "Error adding comment: ${e.message}")
+            Log.e("TAG:addCommentToPost", "Error adding comment: ${e.message}")
             false
         }
     }
 
-    override suspend fun getComments(postId: String): Result<List<Comment>> {
+    override suspend fun getComments(postId: String): Result<MutableList<Comment>> {
+        val commentList = mutableListOf<Comment>()
         return try {
-            Log.d("getComments", "게시물의 아이디: $postId")
+            Log.d("TAG:getComments", "Post ID: $postId")
 
-            // content 컬렉션 -> postId 문서 -> comments 서브컬렉션으로 접근
             val commentSnapshots = postsCollection
-                .document(postId)       // 해당 postId 문서를 참조
-                .collection("comments") // comments 서브컬렉션을 참조
+                .document(postId)
+                .collection("comments")
                 .get()
                 .await()
 
-            if (commentSnapshots.isEmpty) {
-                Log.d("getComments", "댓글이 비워져 있습니다.")
-                return Result.success(emptyList())
+            Log.d("TAG:getComments", "Number of comments found: ${commentSnapshots.size()}")
+
+            for (snapshot in commentSnapshots) {
+                val comment = snapshot.toObject(Comment::class.java)
+                Log.d("TAG:getComments", "Snapshot data: ${snapshot.data}")
+                Log.d("TAG:getComments", "Deserialized comment: $comment")
+
+                commentList.add(comment)
             }
 
-            // 댓글을 Comment 객체로 변환하여 리스트로 반환
-            val commentsList = commentSnapshots.documents.mapNotNull { document ->
-                document.toObject(Comment::class.java)
-
-            }
-            Log.d("getComments", "commentsList: $commentsList")
-
-            Result.success(commentsList)
+            Result.success(commentList)
         } catch (e: Exception) {
-            Log.e("getComments", "Error getting comments for postId: $postId", e)
+            Log.e("TAG:getComments", "Error getting comments for postId: $postId", e)
             Result.failure(e)
         }
     }
 
 
     override suspend fun getPostById(postId: String): PostData {
-        Log.d("getPostById", "Fetching post with ID: $postId")
+        Log.d("TAG:getPostById", "Fetching post with ID: $postId")
 
         return try {
             // 포스트 데이터를 가져옴
@@ -80,18 +78,18 @@ class PostDataRepositoryImpl(
 
             if (snapshot.exists()) {
                 val post = snapshot.toObject(PostData::class.java)
-                val imageUrl = getImageDownloadUrl(post!!.imagePath)
+                val imageUrl = getImageDownloadUrl(post!!.imagePath) // 이미지 URL 비동기 처리
 
                 // 댓글 가져오기
-                Log.d("getPostById", "Fetching comments for postId: $postId")
+                Log.d("TAG:getPostById", "Fetching comments for postId: $postId")
                 val result = getComments(postId)
 
                 if (result.isFailure) {
-                    Log.e("getPostById", "Failed to get comments for postId: $postId")
+                    Log.e("TAG:getPostById", "Failed to get comments for postId: $postId")
                 }
 
                 // 댓글을 가져온 후 처리
-                val comments = result.getOrNull() ?: emptyList()
+                val comments: MutableList<Comment> = result.getOrNull()?.toMutableList() ?: mutableListOf()
 
                 // 댓글을 포함하여 포스트 반환
                 post.copy(imagePath = imageUrl, comments = comments)
@@ -99,26 +97,39 @@ class PostDataRepositoryImpl(
                 throw Exception("Post not found")
             }
         } catch (e: Exception) {
-            Log.e("getPostById", "Error fetching post: ${e.message}")
+            Log.e("TAG:getPostById", "Error fetching post: ${e.message}")
             throw e
         }
     }
-
     override suspend fun getAllPosts(): Result<List<PostData>> {
         return try {
             val snapshot = postsCollection.orderBy("time").get().await()
             val posts = snapshot.toObjects(PostData::class.java)
 
-            // Fetch image URLs for each post
-            val postsWithImages = posts.map { post ->
-                val imageUrl = getImageDownloadUrl(post.imagePath)
-                post.copy(imagePath = imageUrl)
+            // 각 게시물에 대해 이미지와 댓글을 함께 가져옵니다.
+            val postsWithImagesAndComments = posts.map { post ->
+                val imageUrl = getImageDownloadUrl(post.imagePath) // 이미지 URL 비동기 처리
+
+                // 댓글 가져오기
+                val result = getComments(post.postId)
+                Log.e("TAG:getAllPosts", "result: ${result}")
+
+                if (result.isFailure) {
+                    Log.e("TAG:getAllPosts", "Failed to get comments for postId: ${post.postId}")
+                }
+
+                val comments: MutableList<Comment> = result.getOrNull()?.toMutableList() ?: mutableListOf()
+
+                // 이미지와 댓글이 포함된 PostData 객체 생성
+                post.copy(imagePath = imageUrl, comments = comments)
             }
-            Result.success(postsWithImages)
+
+            Result.success(postsWithImagesAndComments)
         } catch (e: Exception) {
             Result.failure(e)
         }
     }
+
 
     override suspend fun updatePost(postData: PostData): Boolean {
         return try {
@@ -154,7 +165,7 @@ class PostDataRepositoryImpl(
                 val uri = storageRef.child(imagePath).downloadUrl.await()
                 uri.toString()
             } catch (e: Exception) {
-                Log.e("Firebase", "Error getting download URL: ${e.message}")
+                Log.e("TAG:Firebase", "Error getting download URL: ${e.message}")
                 ""
             }
         }

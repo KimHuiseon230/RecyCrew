@@ -16,7 +16,7 @@ data class PostData(
     val likeCount: Int = 0,
     val viewCount: Int = 0,
     val time: String = "",
-    val comments: List<Comment> = emptyList()
+    val comments: MutableList<Comment> = mutableListOf()
 ) : Parcelable
 
 
