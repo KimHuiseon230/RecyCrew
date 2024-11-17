@@ -3,16 +3,19 @@ package com.piooda.recycrew.feature.auth
 import android.net.Uri
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.navArgs
 import com.google.firebase.Firebase
 import com.google.firebase.storage.storage
-import com.piooda.domain.model.PostData
+import com.piooda.data.model.PostData
 import com.piooda.recycrew.core_ui.base.ViewModelFactory
 import com.piooda.recycrew.databinding.ActivityInputBinding
 import com.piooda.recycrew.feature.community.question.QuestionDetailsViewModel
 import com.piooda.recycrew.feature.community.question.QuestionFragmentArgs
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.UUID
@@ -30,22 +33,22 @@ class InputActivity : AppCompatActivity() {
         args.detailedQuestData
     }
 
-//    private val requestPermissions =
-//        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
-//            if (isGranted) {
-//                // Permission granted, get images
-//                lifecycleScope.launch {
-//                    /*   try {
-//                           selectImage()
-//                       } catch (e: Exception) {
-//                           navigateToErrorPage(this@SignUpProfileActivity)
-//                       }*/
-//                }
-//            } else {
-//                /*Timber.tag("permission").d("권한 거부")
-//                showPermissionAppSettingsDialog()*/
-//            }
-//        }
+    private val requestPermissions =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+            if (isGranted) {
+                // Permission granted, get images
+                lifecycleScope.launch {
+                    /*   try {
+                           selectImage()
+                       } catch (e: Exception) {
+                           navigateToErrorPage(this@SignUpProfileActivity)
+                       }*/
+                }
+            } else {
+                /*Timber.tag("permission").d("권한 거부")
+                showPermissionAppSettingsDialog()*/
+            }
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

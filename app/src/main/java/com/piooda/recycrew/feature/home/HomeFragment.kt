@@ -8,7 +8,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import com.piooda.domain.model.DetailedImageData
+import com.piooda.data.model.DetailedImageData
 import com.piooda.recycrew.core_ui.base.BaseFragment
 import com.piooda.recycrew.core_ui.base.ViewModelFactory
 import com.piooda.recycrew.databinding.FragmentHomeBinding

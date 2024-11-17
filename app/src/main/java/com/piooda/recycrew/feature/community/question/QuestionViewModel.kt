@@ -3,8 +3,8 @@ package com.piooda.recycrew.feature.community.question
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.piooda.domain.model.PostData
-import com.piooda.domain.repository.PostDataRepository
+import com.piooda.data.model.PostData
+import com.piooda.data.repository.PostDataRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch

@@ -3,8 +3,8 @@ package com.piooda.recycrew.feature.home
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.piooda.domain.model.DetailedImageData
-import com.piooda.domain.repositoryImpl.FirebaseImageDataRepository
+import com.piooda.data.model.DetailedImageData
+import com.piooda.data.repositoryImpl.FirebaseImageDataRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch

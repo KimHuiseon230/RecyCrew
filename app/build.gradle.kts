@@ -80,5 +80,5 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.glide)
 
-    implementation(project(":app:data"))
+    implementation(project(":data"))
 }

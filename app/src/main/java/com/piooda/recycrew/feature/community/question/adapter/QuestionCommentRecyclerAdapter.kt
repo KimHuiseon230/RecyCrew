@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.piooda.domain.model.Comment
+import com.piooda.data.model.Comment
 import com.piooda.recycrew.databinding.ItemCommentUserBinding
 
 

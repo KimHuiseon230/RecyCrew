@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.piooda.domain.model.PostData
+import com.piooda.data.model.PostData
 import com.piooda.recycrew.databinding.ItemCommunityPostBinding
 
 //첫리사이클러뷰 목록가져오기

@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.piooda.domain.model.DetailedImageData
+import com.piooda.data.model.DetailedImageData
 import com.piooda.recycrew.databinding.ItemCategoriesBasicImageBinding
 
 class CategoriesBasicImagesAdapter(private val onClick: (DetailedImageData) -> Unit) :

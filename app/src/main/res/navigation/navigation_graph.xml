@@ -74,7 +74,7 @@
             app:destination="@id/categoriesDetailedImagesFragment">
             <argument
                 android:name="detailedImageData"
-                app:argType="com.piooda.domain.model.DetailedImageData" />
+                app:argType="com.piooda.data.model.DetailedImageData" />
         </action>
     </fragment>
     <fragment
@@ -92,7 +92,7 @@
             app:destination="@id/questionDetailFragment" />
         <argument
             android:name="detailedQuestData"
-            app:argType="com.piooda.domain.model.PostData" />
+            app:argType="com.piooda.data.model.PostData" />
     </fragment>
     <action
         android:id="@+id/action_questionFragment_to_inputScreen"
@@ -105,7 +105,7 @@
 
         <argument
             android:name="detailedImageData"
-            app:argType="com.piooda.domain.model.DetailedImageData" />
+            app:argType="com.piooda.data.model.DetailedImageData" />
     </fragment>
     <fragment
         android:id="@+id/questionDetailFragment"
@@ -114,7 +114,7 @@
         tools:layout="@layout/fragment_question_detail">
         <argument
             android:name="detailedQuestData"
-            app:argType="com.piooda.domain.model.PostData" />
+            app:argType="com.piooda.data.model.PostData" />
     </fragment>
 </navigation>
 

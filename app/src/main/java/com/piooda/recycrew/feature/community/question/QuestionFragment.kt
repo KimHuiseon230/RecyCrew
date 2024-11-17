@@ -10,7 +10,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.piooda.domain.model.PostData
+import com.piooda.data.model.PostData
 import com.piooda.recycrew.core_ui.base.BaseFragment
 import com.piooda.recycrew.core_ui.base.ViewModelFactory
 import com.piooda.recycrew.databinding.FragmentQuestionBinding
