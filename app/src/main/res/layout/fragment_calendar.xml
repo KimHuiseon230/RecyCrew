@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <androidx.constraintlayout.helper.widget.Flow
+        android:id="@+id/flowCalendar"
+        app:constraint_referenced_ids="tree,calendarView"
+        app:flow_wrapMode="aligned"
+        app:flow_maxElementsWrap="1"
+        app:flow_verticalGap="0dp"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/tree"
+        android:layout_width="wrap_content"
+        android:layout_height="215dp"
+        android:src="@drawable/tree" />
+
+    <com.applandeo.materialcalendarview.CalendarView
+        android:id="@+id/calendarView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:headerColor="@color/Primary_Color" />
+
+    <androidx.constraintlayout.helper.widget.Flow
+        android:id="@+id/flowButton"
+        app:constraint_referenced_ids="attendanceCheckBtn,myPageBtn"
+        app:flow_wrapMode="chain"
+        app:flow_horizontalStyle="spread"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/flowCalendar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        />
+
+    <com.piooda.recycrew.core_ui.view.GreenButton
+        android:id="@+id/attendanceCheckBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:text="출석 체크" />
+
+    <com.piooda.recycrew.core_ui.view.GreenButton
+        android:id="@+id/myPageBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:text="마이페이지" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

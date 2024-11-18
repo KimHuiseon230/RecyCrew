@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
 class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::inflate) {
     private lateinit var categoriesBasicImagesAdapter: CategoriesBasicImagesAdapter
     private val viewModel by viewModels<CategoriesBasicImagesViewModel> {
-        ViewModelFactory
+        ViewModelFactory(requireContext())
     }
 
     override fun onCreateView(

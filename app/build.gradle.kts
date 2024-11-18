@@ -82,7 +82,6 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.glide)
 
-    implementation(project(":data"))
 
     implementation(libs.firebase.auth)
     implementation(libs.play.services.auth)
@@ -91,5 +90,6 @@ dependencies {
     implementation(libs.androidx.datastore.preferences)
     annotationProcessor(libs.compiler)
     implementation(libs.androidx.legacy.support.v4)
-
+    implementation(project(":data"))
+    implementation(project(":common"))
 }
