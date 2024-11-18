@@ -63,7 +63,7 @@ class QuestionFragment : BaseFragment<FragmentQuestionBinding>(FragmentQuestionB
     private fun observePostData() {
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.postData.collect { result ->
-                updateUIState(result)
+                //updateUIState(result)
             }
         }
     }

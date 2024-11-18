@@ -4,6 +4,8 @@ plugins {
     alias(libs.plugins.google.services)
     alias(libs.plugins.org.jetbrains.kotlin.kapt)
     alias(libs.plugins.androidx.navigation.safe.args)
+    alias(libs.plugins.devtools)
+    alias(libs.plugins.kotlin.parcelize)
 }
 
 android {
@@ -84,4 +86,10 @@ dependencies {
 
     implementation(libs.firebase.auth)
     implementation(libs.play.services.auth)
+
+    implementation(libs.material.calendar.view)
+    implementation(libs.androidx.datastore.preferences)
+    annotationProcessor(libs.compiler)
+    implementation(libs.androidx.legacy.support.v4)
+
 }
