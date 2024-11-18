@@ -1,74 +1,83 @@
 package com.piooda.recycrew.feature.community.question
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.piooda.data.model.PostData
 import com.piooda.data.repository.PostDataRepository
+import com.piooda.recycrew.core_ui.base.UIState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import kotlin.coroutines.cancellation.CancellationException
 
 class QuestionDetailsViewModel(private val repository: PostDataRepository) : ViewModel() {
 
-    private val _q_postData = MutableStateFlow<List<PostData>>(emptyList())
-    val q_postData: StateFlow<List<PostData>> get() = _q_postData
+    private val _q_postData = MutableStateFlow<UIState<List<PostData>>>(UIState.Loading)
+    val q_postData: StateFlow<UIState<List<PostData>>> get() = _q_postData
 
     // 게시물 목록을 불러오는 메서드
-    fun loadData(postData: PostData) {
-        viewModelScope.launch {
-            try {
-                Log.d("QuestionDetailsViewModel", "Starting to fetch post data")
-
-                // 모든 게시물 가져오기
-                val result = repository.getAllPosts()
-
-                // 결과 처리
-                result.onSuccess { postList ->
-                    Log.d("QuestionDetailsViewModel", "Successfully fetched post data")
-                    _q_postData.value = postList // 게시물 목록을 StateFlow에 저장
-                }.onFailure { error ->
-                    Log.e("QuestionDetailsViewModel", "Failed to fetch post data", error)
-                }
-
-
-            } catch (e: CancellationException) {
-                Log.e("QuestionDetailsViewModel", "Job was cancelled", e)
-            } catch (e: Exception) {
-                Log.e("QuestionDetailsViewModel", "Unexpected error occurred", e)
-            }
+    fun loadData() {
+        updateStateWithLoading {
+            val result = repository.getAllPosts()
+            handleResult(result,
+                onSuccess = { postList -> _q_postData.value = UIState.Success(postList) },
+                onFailure = { message -> _q_postData.value = UIState.Failure(message) }
+            )
         }
     }
 
+    // 게시물 삭제 메서드
+    fun deletePost(postId: String) {
+        updateStateWithLoading {
+            // deletePost가 Result 타입을 반환하도록 변경
+            val result = repository.deletePost(postId)
+            handleResult(result,
+                onSuccess = { _ ->
+                    loadData() // UI 갱신
+                },
+                onFailure = { message ->
+                    _q_postData.value = UIState.Failure(message) // 실패 메시지 처리
+                }
+            )
+        }
+    }
+
+    // 게시물 생성 메서드
     fun createPost(postData: PostData) {
-        viewModelScope.launch {
-            try {
-                Log.d("QuestionDetailsViewModel", "Creating post")
-                val result = repository.createPost(postData)
-
-                result.onSuccess { createdPost ->
-                    Log.d("QuestionDetailsViewModel", "Successfully created post: ${createdPost}")
-                    _q_postData.value = _q_postData.value + createdPost  // 새 게시물 추가 후 UI 갱신
-                }.onFailure { error ->
-                    Log.e("QuestionDetailsViewModel", "Failed to create post", error)
-                }
-            } catch (e: Exception) {
-                Log.e("QuestionDetailsViewModel", "Unexpected error occurred", e)
-            }
+        updateStateWithLoading {
+            val result = repository.createPost(postData)
+            handleResult(result,
+                onSuccess = { createdPost ->
+                    val updatedList =
+                        (_q_postData.value as? UIState.Success)?.data.orEmpty() + createdPost
+                    _q_postData.value = UIState.Success(updatedList)
+                },
+                onFailure = { message -> _q_postData.value = UIState.Failure(message) }
+            )
         }
     }
 
-    fun getPostById(postData: PostData) {
+    // 로딩 상태 처리 간소화 함수
+    private fun updateStateWithLoading(action: suspend () -> Unit) {
         viewModelScope.launch {
+            _q_postData.value = UIState.Loading
             try {
-                // 포스트 데이터 가져오기
-                val post = repository.getPostById(postData.postId)
-                _q_postData.value = listOf(post) // StateFlow에 결과 저장
+                action()
             } catch (e: Exception) {
-                Log.e("PostViewModel", "Error fetching post by ID", e)
+                _q_postData.value = UIState.Failure(e.message ?: "Unexpected error occurred")
             }
         }
     }
 }
 
+private fun <T> handleResult(
+    result: Result<T>,
+    onSuccess: (T) -> Unit = {},
+    onFailure: (String) -> Unit = {},
+) {
+    result.onSuccess { data ->
+        onSuccess(data)  // 성공적으로 데이터를 받았을 때의 처리
+    }.onFailure { error ->
+        val message = error.message ?: "Unknown error occurred"
+        onFailure(message)  // 실패했을 때의 처리
+    }
+}

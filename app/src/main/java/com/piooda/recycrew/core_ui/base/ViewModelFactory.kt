@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.piooda.data.repositoryImpl.FirebaseImageDataRepository
-import com.piooda.domain.repositoryImpl.PostDataRepositoryImpl
+import com.piooda.data.repositoryImpl.PostDataRepositoryImpl
 import com.piooda.recycrew.feature.community.question.QuestionDetailsViewModel
 import com.piooda.recycrew.feature.community.question.QuestionViewModel
 import com.piooda.recycrew.feature.home.CategoriesBasicImagesViewModel

@@ -1,7 +1,9 @@
-package com.piooda.domain.repositoryImpl
+package com.piooda.data.repositoryImpl
 
 import android.util.Log
+import com.google.firebase.Firebase
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.firestore
 import com.google.firebase.storage.FirebaseStorage
 import com.piooda.data.model.Comment
 import com.piooda.data.model.PostData
@@ -24,6 +26,7 @@ class PostDataRepositoryImpl(
             val postRef = postsCollection.add(postData).await()
 
             // 게시글 하위에 빈 'comments' 컬렉션 생성
+
             val postId = postRef.id // 생성된 게시물의 ID
 
             // Firestore에 하위 'comments' 컬렉션을 빈 문서로 초기화
@@ -81,68 +84,63 @@ class PostDataRepositoryImpl(
         }
     }
 
-
     override suspend fun getPostById(postId: String): PostData {
-        Log.d("TAG:getPostById", "Fetching post with ID: $postId")
-
+        Log.d(TAG, "Fetching post with ID: $postId")
         return try {
-            // 포스트 데이터를 가져옴
             val snapshot = postsCollection.document(postId).get().await()
-
             if (snapshot.exists()) {
                 val post = snapshot.toObject(PostData::class.java)
-                val imageUrl = getImageDownloadUrl(post!!.imagePath) // 이미지 URL 비동기 처리
+                    ?: throw Exception("Post data is null")
+                Log.d(TAG, "Snapshot exists: ${snapshot.exists()}")
+
+                // Firebase Storage에서 다운로드 URL 가져오기
+                val imageUrl = withContext(Dispatchers.IO) {
+                    getImageDownloadUrl((post.imagePath))
+                } ?: ""
 
                 // 댓글 가져오기
-                Log.d("TAG:getPostById", "Fetching comments for postId: $postId")
-                val result = getComments(postId)
+                val comments = withContext(Dispatchers.IO) {
+                    getComments(postId).getOrNull()?.toMutableList()
+                } ?: mutableListOf()
 
-                if (result.isFailure) {
-                    Log.e("TAG:getPostById", "Failed to get comments for postId: $postId")
-                }
-
-                // 댓글을 가져온 후 처리
-                val comments: MutableList<Comment> = result.getOrNull()?.toMutableList() ?: mutableListOf()
-
-                // 댓글을 포함하여 포스트 반환
+                // 데이터 복사
                 post.copy(imagePath = imageUrl, comments = comments)
             } else {
                 throw Exception("Post not found")
             }
         } catch (e: Exception) {
-            Log.e("TAG:getPostById", "Error fetching post: ${e.message}")
+            Log.e(TAG, "Error fetching post: ${e.message}", e)
             throw e
         }
     }
+
+
     override suspend fun getAllPosts(): Result<List<PostData>> {
         return try {
             val snapshot = postsCollection.orderBy("time").get().await()
             val posts = snapshot.toObjects(PostData::class.java)
 
-            // 각 게시물에 대해 이미지와 댓글을 함께 가져옵니다.
+            // 비동기적으로 모든 포스트에 대해 이미지 URL과 댓글 가져오기
             val postsWithImagesAndComments = posts.map { post ->
-                val imageUrl = getImageDownloadUrl(post.imagePath) // 이미지 URL 비동기 처리
+                withContext(Dispatchers.IO) {
+                    // 이미지 URL 가져오기 (null일 경우 기본값 설정)
+                    val imageUrl = getImageDownloadUrl(post.imagePath)
 
-                // 댓글 가져오기
-                val result = getComments(post.postId)
-                Log.e("TAG:getAllPosts", "result: ${result}")
+                    // 댓글 가져오기
+                    val comments =
+                        getComments(post.postId).getOrNull()?.toMutableList() ?: mutableListOf()
 
-                if (result.isFailure) {
-                    Log.e("TAG:getAllPosts", "Failed to get comments for postId: ${post.postId}")
+                    // 데이터 복사
+                    post.copy(imagePath = imageUrl.toString(), comments = comments)
                 }
-
-                val comments: MutableList<Comment> = result.getOrNull()?.toMutableList() ?: mutableListOf()
-
-                // 이미지와 댓글이 포함된 PostData 객체 생성
-                post.copy(imagePath = imageUrl, comments = comments)
             }
 
             Result.success(postsWithImagesAndComments)
         } catch (e: Exception) {
+            Log.e(TAG, "Error fetching posts: ${e.message}", e)
             Result.failure(e)
         }
     }
-
 
     override suspend fun updatePost(postData: PostData): Boolean {
         return try {
@@ -152,15 +150,27 @@ class PostDataRepositoryImpl(
             false
         }
     }
-
-    override suspend fun deletePost(postId: String): Boolean {
+    // Repository에서 Boolean 값 반환 -> Result로 변환
+    override suspend fun deletePost(postId: String): Result<Boolean> {
         return try {
+            // 댓글 먼저 삭제
+            val commentsCollection = postsCollection.document(postId).collection("comments")
+            val commentSnapshots = commentsCollection.get().await()
+            for (comment in commentSnapshots) {
+                commentsCollection.document(comment.id).delete().await()
+            }
+            // 게시물 삭제
             postsCollection.document(postId).delete().await()
-            true
+
+            Log.d("TAG:deletePost", "Deleted post with ID: $postId")  // 게시글 삭제 확인
+            Result.success(true)  // 성공 시 Result.success로 감싸서 반환
         } catch (e: Exception) {
-            false
+            Log.e("TAG:deletePost", "Error deleting post with ID $postId: ${e.message}", e)
+            Result.failure(e)  // 실패 시 Result.failure로 감싸서 반환
         }
     }
+
+
 
     override suspend fun getPostsByTitle(title: String): Result<List<PostData>> {
         return try {
@@ -172,14 +182,32 @@ class PostDataRepositoryImpl(
         }
     }
 
-    private suspend fun getImageDownloadUrl(imagePath: String): String =
+    private suspend fun getImageDownloadUrl(imagePath: String): String? =
         withContext(Dispatchers.IO) {
             try {
+                if (imagePath.isBlank()) {
+                    Log.e(TAG, "Image path is blank.")
+                    return@withContext null
+                }
+
+                // imagePath가 이미 다운로드 URL인지 확인
+                if (imagePath.startsWith("https://")) {
+                    Log.d(TAG, "Image path is already a download URL: $imagePath")
+                    return@withContext imagePath
+                }
+
+                // Storage 경로를 사용해 다운로드 URL 생성
                 val uri = storageRef.child(imagePath).downloadUrl.await()
+                Log.d(TAG, "Download URL retrieved: $uri")
                 uri.toString()
             } catch (e: Exception) {
-                Log.e("TAG:Firebase", "Error getting download URL: ${e.message}")
-                ""
+                Log.e(TAG, "Error retrieving download URL for path: $imagePath", e)
+                null
             }
         }
+
+
+    companion object {
+        private const val TAG = "Firebase"
+    }
 }

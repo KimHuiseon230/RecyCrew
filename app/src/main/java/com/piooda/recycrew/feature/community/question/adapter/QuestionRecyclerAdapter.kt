@@ -28,7 +28,7 @@ class QuestionRecyclerAdapter(
             binding.tvLikeCount.text = item.likeCount.toString()
             Glide.with(binding.root.context)
                 .load(item.imagePath)
-                .into(binding.imgUserProfile)
+                .into(binding.imagePath)
             binding.root.setOnClickListener { onClick(item) } // 아이템 클릭 이벤트 처리
         }
 
@@ -46,7 +46,7 @@ class QuestionRecyclerAdapter(
 
     class DiffCallback : DiffUtil.ItemCallback<PostData>() {
         override fun areItemsTheSame(oldItem: PostData, newItem: PostData): Boolean {
-            return oldItem.userId == newItem.userId
+            return oldItem.imagePath == newItem.imagePath
         }
 
         override fun areContentsTheSame(oldItem: PostData, newItem: PostData): Boolean {

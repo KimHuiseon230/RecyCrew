@@ -17,7 +17,7 @@ interface PostDataRepository {
     suspend fun updatePost(postData: PostData): Boolean
 
     // 게시글 삭제 (postId로 삭제)
-    suspend fun deletePost(postId: String): Boolean
+    suspend fun deletePost(postId: String): Result<Boolean>
 
     // 게시글 제목으로 검색
     suspend fun getPostsByTitle(title: String): Result<List<PostData>>

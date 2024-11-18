@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.piooda.data.model.Comment
 import com.piooda.recycrew.databinding.ItemCommentUserBinding
 
+// 플로우 바인딩 사용하기
 
 // 댓글 리사이클러뷰 (사용자 이름, 내용)
 class QuestionCommentRecyclerAdapter :

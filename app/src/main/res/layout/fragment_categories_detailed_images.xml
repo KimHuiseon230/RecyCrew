@@ -1,6 +1,6 @@
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp">
@@ -10,25 +10,25 @@
         android:id="@+id/titleTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:paddingBottom="16dp"
         android:text="@string/title_text"
         android:textSize="20sp"
         android:textStyle="bold"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:paddingBottom="16dp"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <!-- Image Placeholder -->
     <ImageView
         android:id="@+id/imagePlaceholder"
         android:layout_width="0dp"
         android:layout_height="200dp"
-        android:scaleType="centerCrop"
+        android:layout_marginBottom="16dp"
         android:background="#E0E0E0"
-        app:layout_constraintTop_toBottomOf="@id/titleTextView"
-        app:layout_constraintStart_toStartOf="parent"
+        android:scaleType="centerCrop"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginBottom="16dp"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/titleTextView" />
 
     <!-- Category Label -->
     <TextView
@@ -37,18 +37,18 @@
         android:layout_height="wrap_content"
         android:text="@string/category_label"
         android:textStyle="bold"
-        app:layout_constraintTop_toBottomOf="@id/imagePlaceholder"
-        app:layout_constraintStart_toStartOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/imagePlaceholder" />
 
     <!-- Category Text -->
     <TextView
         android:id="@+id/categoryTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
         android:text="@string/category_text"
-        app:layout_constraintTop_toBottomOf="@id/categoryLabel"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginBottom="8dp"/>
+        app:layout_constraintTop_toBottomOf="@id/categoryLabel" />
 
     <!-- Subcategory Label -->
     <TextView
@@ -57,18 +57,18 @@
         android:layout_height="wrap_content"
         android:text="@string/subcategory_label"
         android:textStyle="bold"
-        app:layout_constraintTop_toBottomOf="@id/categoryTextView"
-        app:layout_constraintStart_toStartOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/categoryTextView" />
 
     <!-- Subcategory Text -->
     <TextView
         android:id="@+id/subcategoryTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
         android:text="@string/subcategory_text"
-        app:layout_constraintTop_toBottomOf="@id/subcategoryLabel"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginBottom="8dp"/>
+        app:layout_constraintTop_toBottomOf="@id/subcategoryLabel" />
 
     <!-- Excluded Items Label -->
     <TextView
@@ -77,8 +77,8 @@
         android:layout_height="wrap_content"
         android:text="@string/excluded_items_label"
         android:textStyle="bold"
-        app:layout_constraintTop_toBottomOf="@id/subcategoryTextView"
-        app:layout_constraintStart_toStartOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/subcategoryTextView" />
 
     <!-- Excluded Items Text -->
     <TextView
@@ -86,9 +86,21 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@string/excluded_items_text"
-        app:layout_constraintTop_toBottomOf="@id/excludedItemsLabel"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginBottom="8dp"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/excludedItemsLabel" />
+
+    <com.google.android.material.progressindicator.CircularProgressIndicator
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:visibility="visible"
+        app:indicatorSize="48dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:trackThickness="4dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
