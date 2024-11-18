@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/fragment_home"
+        android:id="@+id/homeFragment"
         android:icon="@drawable/ic_baseline_home_24"
         android:title="" />
     <item
-        android:id="@+id/fragment_community"
+        android:id="@+id/communityFragment"
         android:icon="@drawable/ic_baseline_committee_24"
         android:title="" />
     <item
-        android:id="@+id/fragment_event"
+        android:id="@+id/eventFragment"
         android:icon="@drawable/ic_baseline_event_24"
         android:title="" />
     <item
-        android:id="@+id/fragment_mypag"
+        android:id="@+id/myPageFragment"
         android:icon="@drawable/ic_settings"
         android:title="" />
 </menu>

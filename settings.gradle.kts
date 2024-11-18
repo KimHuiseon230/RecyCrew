@@ -22,4 +22,4 @@ dependencyResolutionManagement {
 rootProject.name = "RecyCrew"
 include(":app")
 
-include(":app:data")
+include(":data")

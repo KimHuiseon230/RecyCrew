@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     android:padding="@dimen/padding">
 
+    <!-- 카테고리 입력 -->
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/categoryTextLayoutInput"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -27,6 +28,7 @@
         </com.google.android.material.textfield.TextInputEditText>
     </com.google.android.material.textfield.TextInputLayout>
 
+    <!-- 제목 입력 -->
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/titleTextLayoutInput"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -47,6 +49,7 @@
             android:textAppearance="@style/TextAppearance.App" />
     </com.google.android.material.textfield.TextInputLayout>
 
+    <!-- 내용 입력 -->
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/contentTextLayoutInput"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -69,11 +72,39 @@
             android:textAppearance="@style/TextAppearance.App" />
     </com.google.android.material.textfield.TextInputLayout>
 
+    <!-- 이미지 선택 버튼 -->
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/selectImageButton"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin"
+        android:text="@string/button_select_image"
+        app:layout_constraintTop_toBottomOf="@+id/contentTextLayoutInput"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- 이미지 미리보기 -->
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/imagePreview"
+        android:layout_width="0dp"
+        android:layout_height="200dp"
+        android:layout_marginTop="@dimen/margin"
+        android:layout_marginBottom="@dimen/margin"
+        android:contentDescription="@string/image_preview_desc"
+        android:src="@drawable/googleg_disabled_color_18"
+        app:layout_constraintBottom_toTopOf="@+id/confirmButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/selectImageButton" />
+
+    <!-- 제출 버튼 -->
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/confirmButton"
         style="@style/Widget.AppCompat.Button.Colored"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:backgroundTint="@color/Primary_Color"
         android:paddingStart="@dimen/padding"
         android:paddingTop="@dimen/padding_small"
         android:paddingEnd="@dimen/padding"
@@ -83,6 +114,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.1"
-        android:backgroundTint="@color/Primary_Color"
         app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

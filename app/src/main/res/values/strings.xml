@@ -13,8 +13,11 @@
     <!-- activity_input.xml -->
     <string name="input_hint_category">카테고리</string>
     <string name="input_hint_title">제목</string>
-    <string name="input_hint_detail">내용</string>
-    <string name="button_submit">입력 완료</string>
+    <string name="input_hint_detail">상세 내용</string>
+    <!-- 버튼 텍스트 -->
+    <string name="button_select_image">이미지 선택</string>
+    <string name="button_submit">제출</string>
+    <string name="image_preview_desc">미리보기 이미지</string>
     <string name="button_cancel">취소</string>
     <!-- activity_login.xml-->
     <string name="main_text">회원가입</string>
@@ -76,4 +79,22 @@
     <string name="trade_text_username">@string/text_username_sample</string>
     <string name="trade_text_location">@string/text_location_sample</string>
     <string name="trade_text_count">@string/text_comment_count_sample</string>
+    <!-- fragment_recycling_categories.xml-->
+    <string name="title_text">분리수거 품목명</string>
+    <string name="category_label">품목</string>
+    <string name="category_text">골판지류</string>
+    <string name="subcategory_label">세부품목</string>
+    <string name="subcategory_text">골판지 상자</string>
+    <string name="excluded_items_label">비해당 품목</string>
+    <string name="excluded_items_text">택배용 보낸 상자류 등 내부에 알루미늄박+비닐 등이 부착되어 종이와 분리되지 않는 상자류</string>
+
+    <string name="back_button_description">Back</string>
+    <string name="post_title">게시글 제목</string>
+    <string name="post_image">Post Image</string>
+    <string name="post_content">게시글 내용</string>
+    <string name="comments_label">댓글</string>
+    <string name="comment_nickname">닉네임</string>
+    <string name="comment_content">댓글내용</string>
+    <string name="comment_hint">댓글을 입력하세요</string>
+    <string name="send_button">Send</string>
 </resources>

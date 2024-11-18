@@ -3,7 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.google.services)
     alias(libs.plugins.org.jetbrains.kotlin.kapt)
-
+    alias(libs.plugins.androidx.navigation.safe.args)
 }
 
 android {
@@ -49,41 +49,39 @@ android {
     buildFeatures {
         viewBinding = true
         buildConfig = true
-        compose = true
-        dataBinding = true
     }
 }
 
 dependencies {
 
     implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.appcompat)
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
-    implementation(libs.androidx.legacy.support.v4)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
-    implementation(libs.androidx.fragment.ktx)
+    implementation(libs.androidx.activity)
+    implementation(libs.androidx.fragment)
+    implementation(libs.activity.ktx)
+    implementation(libs.fragment.ktx)
+    implementation(libs.androidx.appcompat)
+
     implementation(libs.transport.runtime)
-    implementation(project(":app:data"))
-
-    implementation(libs.androidx.constraintlayout.compose)
-    implementation(libs.androidx.activity.compose)
-    implementation(libs.androidx.hilt.navigation.compose)
-    implementation(libs.androidx.lifecycle.viewmodel.compose)
-    implementation(libs.hilt.android)
-    implementation(libs.androidx.hilt.lifecycle.viewmodel)
-
+    implementation(libs.androidx.recyclerview)
+    implementation(libs.androidx.recyclerview)
     implementation(libs.androidx.storage)
     implementation(libs.firebase.storage.ktx)
+    implementation(libs.google.firebase.firestore)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
     implementation(platform(libs.firebase.bom))
-    implementation(libs.google.firebase.firestore)
-
     implementation(libs.glide)
+
+    implementation(project(":data"))
+
+    implementation(libs.firebase.auth)
+    implementation(libs.play.services.auth)
 }
