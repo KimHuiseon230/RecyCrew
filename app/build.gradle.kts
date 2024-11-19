@@ -5,7 +5,6 @@ plugins {
     alias(libs.plugins.org.jetbrains.kotlin.kapt)
     alias(libs.plugins.androidx.navigation.safe.args)
     alias(libs.plugins.devtools)
-    alias(libs.plugins.kotlin.parcelize)
 }
 
 android {
@@ -55,7 +54,6 @@ android {
 }
 
 dependencies {
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.material)
     implementation(libs.androidx.activity)
@@ -82,7 +80,6 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.glide)
 
-
     implementation(libs.firebase.auth)
     implementation(libs.play.services.auth)
 
@@ -90,6 +87,7 @@ dependencies {
     implementation(libs.androidx.datastore.preferences)
     annotationProcessor(libs.compiler)
     implementation(libs.androidx.legacy.support.v4)
+
     implementation(project(":data"))
     implementation(project(":common"))
 }

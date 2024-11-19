@@ -1,9 +1,7 @@
 package com.piooda.data.repositoryImpl
 
 import android.util.Log
-import com.google.firebase.Firebase
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.firestore
 import com.google.firebase.storage.FirebaseStorage
 import com.piooda.data.model.Comment
 import com.piooda.data.model.PostData
@@ -144,7 +142,7 @@ class PostDataRepositoryImpl(
 
     override suspend fun updatePost(postData: PostData): Boolean {
         return try {
-            postsCollection.document(postData.postId.toString()).set(postData).await()
+            postsCollection.document(postData.postId).set(postData).await()
             true
         } catch (e: Exception) {
             false

@@ -1,20 +1,15 @@
 package com.piooda.recycrew.core_ui.util
 
-import android.content.Context
 import android.content.res.Resources.getSystem
 import android.util.Log
 import android.util.TypedValue
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.bumptech.glide.GenericTransitionOptions.withNoTransition
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.RequestManager
-import com.bumptech.glide.load.resource.bitmap.BitmapTransitionOptions.withCrossFade
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
-import com.bumptech.glide.request.RequestOptions
-import com.bumptech.glide.request.transition.DrawableCrossFadeFactory
 
 
 inline fun ImageView.load(

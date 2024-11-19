@@ -33,7 +33,7 @@ class InputActivity : AppCompatActivity() {
     private val viewModel by viewModels<QuestionDetailsViewModel> { ViewModelFactory(this) }
 
     private val args: QuestionFragmentArgs by navArgs()
-    private val detailedPostData: PostData by lazy { args.detailedQuestData }
+    //private val detailedPostData: PostData by lazy { args.detailedQuestData }
 
     private val pickSinglePhotoLauncher =
         registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri: Uri? ->
