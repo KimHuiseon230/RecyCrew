@@ -23,3 +23,4 @@ rootProject.name = "RecyCrew"
 include(":app")
 
 include(":data")
+include(":common")

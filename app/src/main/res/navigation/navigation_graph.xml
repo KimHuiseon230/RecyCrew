@@ -7,9 +7,22 @@
 
     <fragment
         android:id="@+id/myPageFragment"
-        android:name="com.piooda.recycrew.feature.myPage.MyPageFragment"
+        android:name="com.piooda.recycrew.feature.mypage.MyPageFragment"
         android:label="fragment_my_page"
-        tools:layout="@layout/fragment_my_page" />
+        tools:layout="@layout/fragment_mypage" >
+        <action
+            android:id="@+id/action_myPageFragment_to_FAQFragment"
+            app:destination="@id/FAQFragment" />
+        <action
+            android:id="@+id/action_myPageFragment_to_noticeFragment"
+            app:destination="@id/noticeFragment" />
+        <action
+            android:id="@+id/action_myPageFragment_to_notificationFragment"
+            app:destination="@id/notificationFragment" />
+        <action
+            android:id="@+id/action_myPageFragment_to_editProfileFragment"
+            app:destination="@id/editProfileFragment" />
+    </fragment>
     <fragment
         android:id="@+id/tradeFragment"
         android:name="com.piooda.recycrew.feature.community.trade.TradeFragment"
@@ -19,7 +32,11 @@
         android:id="@+id/attendanceCheckFragment"
         android:name="com.piooda.recycrew.feature.event.attendanceCheck.AttendanceCheckFragment"
         android:label="fragment_attendance_check"
-        tools:layout="@layout/fragment_attendance_check" />
+        tools:layout="@layout/fragment_calendar" >
+        <action
+            android:id="@+id/action_attendanceCheckFragment_to_myPageFragment"
+            app:destination="@id/myPageFragment" />
+    </fragment>
     <fragment
         android:id="@+id/chatFragment"
         android:name="com.piooda.recycrew.feature.chat.ChatFragment"
@@ -116,5 +133,52 @@
             android:name="detailedQuestData"
             app:argType="com.piooda.data.model.PostData" />
     </fragment>
+    <fragment
+        android:id="@+id/FAQFragment"
+        android:name="com.piooda.recycrew.feature.mypage.detail.faq.FAQFragment"
+        android:label="FAQFragment"
+        tools:layout="@layout/fragment_faq"/>
+    <fragment
+        android:id="@+id/noticeFragment"
+        android:name="com.piooda.recycrew.feature.mypage.detail.notice.NoticeFragment"
+        android:label="NoticeFragment"
+        tools:layout="@layout/fragment_notice"/>
+    <fragment
+        android:id="@+id/notificationFragment"
+        android:name="com.piooda.recycrew.feature.mypage.detail.notification.NotificationFragment"
+        android:label="NotificationFragment"
+        tools:layout="@layout/fragment_settingnotification"/>
+    <fragment
+        android:id="@+id/editProfileFragment"
+        android:name="com.piooda.recycrew.feature.mypage.detail.editprofile.EditProfileFragment"
+        android:label="EditProfileFragment"
+        tools:layout="@layout/fragment_editprofile">
+
+        <argument
+            android:name="userProfile"
+            app:argType="com.piooda.data.model.UserProfile" />
+
+        <!-- 마이페이지로 이동 시 editProfileFragment 제거 -->
+        <action
+            android:id="@+id/action_editProfileFragment_to_myPageFragment"
+            app:destination="@id/myPageFragment"
+            app:popUpTo="@id/editProfileFragment"
+            app:popUpToInclusive="true" />
+
+        <!-- 로그아웃 시 마이페이지와 editProfileFragment 모두 제거 -->
+        <action
+            android:id="@+id/action_editProfileFragment_to_authActivity"
+            app:destination="@id/authActivity"
+            app:popUpTo="@id/myPageFragment"
+            app:popUpToInclusive="true" />
+
+    </fragment>
+    <activity
+        android:id="@+id/authActivity"
+        android:name="com.piooda.recycrew.feature.auth.AuthActivity"
+        android:label="AuthActivity"
+        tools:layout="@layout/activity_auth"/>
+
+
 </navigation>
 

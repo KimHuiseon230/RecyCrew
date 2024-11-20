@@ -12,7 +12,36 @@
           "package_name": "com.piooda.recycrew"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "385747213887-1ieto6kdrvlcr7lpq55l0lhoirnjm2mf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.piooda.recycrew",
+            "certificate_hash": "42775c81d836acd74bd170725d25c9018c13e279"
+          }
+        },
+        {
+          "client_id": "385747213887-f8tbooek6trcom7oo3em4796ta3k5pr8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.piooda.recycrew",
+            "certificate_hash": "8ccd1d5cdac64b04aa1c897a54d58c2481de0717"
+          }
+        },
+        {
+          "client_id": "385747213887-fu5fl4f6hepk0f2hh7f3tmomc17p11qd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.piooda.recycrew",
+            "certificate_hash": "73ffdc7c5cf0c7f0e30daab99485663719de59df"
+          }
+        },
+        {
+          "client_id": "385747213887-rlovevqfn6esvkp5agn0np8ohmdkoqeh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyCn37ESuy5gY6j048eoSJ9EYfVv-ud85Tk"
@@ -20,7 +49,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "385747213887-rlovevqfn6esvkp5agn0np8ohmdkoqeh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

@@ -46,7 +46,7 @@ class QuestionRecyclerAdapter(
 
     class DiffCallback : DiffUtil.ItemCallback<PostData>() {
         override fun areItemsTheSame(oldItem: PostData, newItem: PostData): Boolean {
-            return oldItem.imagePath == newItem.imagePath
+            return oldItem.userId == newItem.userId
         }
 
         override fun areContentsTheSame(oldItem: PostData, newItem: PostData): Boolean {
@@ -54,4 +54,3 @@ class QuestionRecyclerAdapter(
         }
     }
 }
-

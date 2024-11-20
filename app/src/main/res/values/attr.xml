@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="hint" format="reference|string" />
+    <attr name="text" format="reference|string" />
+
+    <declare-styleable name="CircularImageView">
+        <attr name="android:src" />
+        <attr name="image_padding" format="integer" />
+    </declare-styleable>
+
+    <declare-styleable name="TagEditText">
+        <attr name="android:inputType" />
+        <attr name="text" />
+        <attr name="hint" />
+    </declare-styleable>
+
+    <declare-styleable name="GreenButton">
+        <attr name="text" />
+    </declare-styleable>
+
+
+</resources>

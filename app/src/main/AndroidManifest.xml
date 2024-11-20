@@ -12,32 +12,21 @@
          or higher if your app targets Android 14 (API level 34) or higher.
     -->
     <uses-permission android:name="android.permission.READ_MEDIA_VISUAL_USER_SELECTED" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <application
         android:allowBackup="true"
+        android:name=".core_ui.base.AttendanceCheckApplication"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/ic_app_logo"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/ic_app_logo_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.RecyCrew"
         tools:targetApi="31">
         <activity
-            android:name=".feature.auth.SignActivity"
-            android:exported="false" />
-        <activity
-            android:name=".feature.auth.InputActivity"
-            android:exported="false" />
-        <activity
-            android:name=".feature.auth.LoginActivity"
-            android:exported="false" />
-        <activity
-            android:name=".feature.auth.SignupActivity"
-            android:exported="false"
-            android:theme="@style/Theme.RecyCrew" />
-        <activity
-            android:name=".feature.MainActivity"
+            android:name=".feature.auth.SplashActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -45,6 +34,34 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".core_ui.base.InputActivity"
+            android:exported="false" />
+        <activity
+            android:name=".feature.auth.LoginActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".feature.auth.AuthActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".feature.auth.SignupActivity"
+            android:exported="false"
+            android:theme="@style/Theme.RecyCrew" />
+        <activity
+            android:name=".feature.MainActivity"
+            android:exported="false">
+
+        </activity>
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
+        <meta-data
+            android:name="com.google.firebase.auth.api.gms.use_device_auth"
+            android:value="true" />
     </application>
 
 </manifest>

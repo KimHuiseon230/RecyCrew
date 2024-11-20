@@ -97,4 +97,84 @@
     <string name="comment_content">댓글내용</string>
     <string name="comment_hint">댓글을 입력하세요</string>
     <string name="send_button">Send</string>
+    <string name="attendance_check">출석인증</string>
+
+
+
+
+    <!-- fragment_notice.xml -->
+    <string name="faq_text_title">급식 메뉴</string>
+    <string name="faq_text_description">오늘 급식 메뉴는 뭔가요?</string>
+    <string name="answer_image">data:image/jpeg;base64,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</string>
+    <string name="notice_text_title">긴급공지</string>
+    <string name="notice_text_description">이벤트 진행합니다 1000p</string>
+
+    <!-- fragment_editProfile.xml -->
+    <string name="sign_out">로그아웃</string>
+    <string name="save">저장</string>
+
+
+    <string name="signup_title">반가워요 회원님!</string>
+    <string name="need_login">로그인이 필요합니다.</string>
+    <string name="saving_attendance">출석 정보 저장 중...</string>
+    <string name="success_attendance">출석 정보 저장 성공!</string>
+    <string name="failure_attendance">출석 정보 저장 실패: %1$s</string>
+    <string name="nothing_to_attendance">초기 상태 또는 수행할 작업이 없습니다.</string>
+    <string name="loading_attendance_data">출석 정보 불러오는중...</string>
+    <string name="success_get_attendance_data">출석 정보 불러오기 성공...</string>
+    <string name="failure_get_attendance_data">데이터 로드 실패: %1$s</string>
+    <string name="empty_attendance_data">출석 데이터 없음</string>
+    <string name="welcome">환영합니다, %1$s!</string>
+    <string name="failure_firebase_auth">Firebase 인증 실패</string>
+    <string name="already_existed_user">이미 존재하는 회원입니다. 초기화를 스킵합니다.</string>
+    <string name="success_register_user">유저가 성공적으로 저장되었습니다.</string>
+    <string name="failure_register_user">유저 등록이 실패했습니다</string>
+    <string name="failure_check_user">firestore에서 유저 확인이 불가능합니다.</string>
+    <string name="firebase_auth_google">firebaseAuthWithGoogle: %1$s</string>
+    <string name="failure_google_sign_in">Google 로그인에 실패했습니다.</string>
+    <string name="access_notification_permission">알림 권한이 허용되었습니다.</string>
+    <string name="denied_notification_permission">알림 권한이 거부되었습니다.</string>
+    <string name="choose_image">이미지를 선택하지 않았습니다.</string>
+    <string name="not_duplicated_nickname">중복되지 않은 닉네임입니다</string>
+    <string name="unknown_error">알 수 없는 오류</string>
+    <string name="empty_nickname">empty</string>
+    <string name="updating_profile">프로필 업데이트 중...</string>
+    <string name="success_update_profile">프로필 업데이트 성공!</string>
+    <string name="failure_update_profile">프로필 업데이트 실패: %1$s</string>
+    <string name="nothing_changed">변경된 내용이 없습니다.</string>
+    <string name="empty_login_info">로그인 정보가 없습니다.</string>
+    <string name="success_initialized_google_session">Google 계정 세션 초기화 완료</string>
+    <string name="checking_nickname">닉네임 확인 중...</string>
+    <string name="duplicated_nickname">이미 존재하는 닉네임입니다.</string>
+    <string name="failure_check_nickname">닉네임 확인 실패: %1$s</string>
+    <string name="initial_state">초기 상태</string>
+    <string name="loading_faq_data">FAQ 로딩중...\n</string>
+    <string name="error_loading_data">FAQ 데이터 로딩 실패</string>
+    <string name="no_data_available">데이터가 없습니다.</string>
+    <string name="loading_notice_data">공지사항 로딩중...</string>
+    <string name="error_loading_notice_data">공지사항 로딩 실패</string>
+    <string name="no_notice_data_available">공지사항이 없습니다.</string>
+    <string name="loading_notification_setting">알림 설정 로드 중...</string>
+    <string name="failure_load_notification_setting">알림 설정 로드 실패: %1$s</string>
+    <string name="no_notification_setting">알림 설정 데이터가 없습니다.</string>
+    <string name="saving_notification_setting">저장 중...</string>
+    <string name="success_notification_setting">저장 성공!</string>
+    <string name="failure_notification_setting">저장 실패: %1$s</string>
+    <string name="empty_notification_setting">초기 상태 또는 작업 없음</string>
+    <string name="success_load_notification_setting">알림 설정 로드 성공: %1$s</string>
+    <string name="unactive_notification">시스템 알림이 비활성화되어 있습니다.</string>
+    <string name="request_notification">알림 권한이 필요합니다.</string>
+    <string name="unactive_app_notification">앱 내 알림이 비활성화되어 있습니다.</string>
+    <string name="channel_id">channel_id</string>
+    <string name="notification_title">알림 제목</string>
+    <string name="notification_description">알림 내용</string>
+    <string name="notification_channel">알림 채널</string>
+    <string name="loading_user_profile">유저 프로필 로딩중...</string>
+    <string name="failure_loading_user_profile">유저 프로필 로딩 실패</string>
+    <string name="empty_user_profile">프로필 정보가 없습니다.</string>
+    <string name="request_login">로그인이 필요합니다.</string>
+    <string name="guest">Guest</string>
+    <string name="points_format">P</string>
+    <string name="nickname">닉네임</string>
+    <string name="notice_point">P가 모였어요</string>
 </resources>
