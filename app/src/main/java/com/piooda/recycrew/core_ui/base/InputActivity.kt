@@ -12,7 +12,6 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.navArgs
 import com.bumptech.glide.Glide
 import com.google.firebase.Firebase
 import com.google.firebase.storage.StorageReference
@@ -20,7 +19,6 @@ import com.google.firebase.storage.storage
 import com.piooda.data.model.PostData
 import com.piooda.recycrew.databinding.ActivityInputBinding
 import com.piooda.recycrew.feature.community.question.QuestionDetailsViewModel
-import com.piooda.recycrew.feature.community.question.QuestionFragmentArgs
 import java.util.UUID
 
 class InputActivity : AppCompatActivity() {
@@ -32,7 +30,7 @@ class InputActivity : AppCompatActivity() {
 
     private val viewModel by viewModels<QuestionDetailsViewModel> { ViewModelFactory(this) }
 
-    private val args: QuestionFragmentArgs by navArgs()
+    //private val args: QuestionFragmentArgs by navArgs()
     //private val detailedPostData: PostData by lazy { args.detailedQuestData }
 
     private val pickSinglePhotoLauncher =
