@@ -8,5 +8,5 @@ import kotlinx.parcelize.Parcelize
 data class Comment(
     val author: String = "",
     val content: String = "",
-    val timestamp: Timestamp = Timestamp.now()  // 기본값을 현재 시간으로 설정
+    val timestamp: Timestamp = Timestamp.now(),  // 기본값을 현재 시간으로 설정
 ) : Parcelable

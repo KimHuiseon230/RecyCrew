@@ -9,7 +9,7 @@ import com.bumptech.glide.Glide
 import com.piooda.data.model.PostData
 import com.piooda.recycrew.databinding.ItemPostBinding
 
-class QuestionDetailRecyclerAdapter :
+class QuestionDetailRecyclerAdapter() :
     ListAdapter<PostData, QuestionDetailRecyclerAdapter.PostViewHolder>(PostDiffCallback()) {
 
     // 아이템 뷰 홀더를 생성하는 함수
@@ -39,8 +39,7 @@ class QuestionDetailRecyclerAdapter :
                 .into(binding.imagePath)
             // 필요한 경우 클릭 이벤트 처리
 
-            binding.root.setOnClickListener {
-                // 클릭 리스너 코드 작성
+            binding.btnOptions.setOnClickListener {
             }
         }
     }

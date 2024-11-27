@@ -8,14 +8,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.piooda.data.model.Comment
 import com.piooda.recycrew.databinding.ItemCommentUserBinding
 
-
-// 댓글 리사이클러뷰 (사용자 이름, 내용)
 class QuestionCommentRecyclerAdapter :
     ListAdapter<Comment, QuestionCommentRecyclerAdapter.CommentViewHolder>(CommentDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CommentViewHolder {
-        val binding =
-            ItemCommentUserBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = ItemCommentUserBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return CommentViewHolder(binding)
     }
 
@@ -30,13 +27,16 @@ class QuestionCommentRecyclerAdapter :
             binding.apply {
                 userName.text = comment.author
                 commentText.text = comment.content
+                // You can add timestamp if necessary:
+                // commentTimestamp.text = comment.timestamp.toString()
             }
         }
     }
 
     class CommentDiffCallback : DiffUtil.ItemCallback<Comment>() {
         override fun areItemsTheSame(oldItem: Comment, newItem: Comment): Boolean {
-            return oldItem.author == newItem.author
+            // Assuming Comment has a unique identifier, e.g., commentId
+            return oldItem.content == newItem.content
         }
 
         override fun areContentsTheSame(oldItem: Comment, newItem: Comment): Boolean {

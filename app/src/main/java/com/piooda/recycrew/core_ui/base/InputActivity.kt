@@ -12,12 +12,15 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.navArgs
 import com.bumptech.glide.Glide
 import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.storage
 import com.piooda.data.model.PostData
 import com.piooda.recycrew.databinding.ActivityInputBinding
+import com.piooda.recycrew.feature.community.question.QuestionDetailFragmentArgs
 import com.piooda.recycrew.feature.community.question.QuestionDetailsViewModel
 import java.util.UUID
 
@@ -30,8 +33,10 @@ class InputActivity : AppCompatActivity() {
 
     private val viewModel by viewModels<QuestionDetailsViewModel> { ViewModelFactory(this) }
 
-    //private val args: QuestionFragmentArgs by navArgs()
-    //private val detailedPostData: PostData by lazy { args.detailedQuestData }
+
+    private val args: QuestionDetailFragmentArgs by navArgs()  // 자동으로 생성된 NavArgs 클래스
+
+    private val postData: PostData by lazy { args.detailedQuestPostData }
 
     private val pickSinglePhotoLauncher =
         registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri: Uri? ->
@@ -159,6 +164,11 @@ class InputActivity : AppCompatActivity() {
             return
         }
 
+        val currentUser = FirebaseAuth.getInstance().currentUser
+
+        val userId = currentUser?.uid ?: "UnknownUser"
+        val userName = currentUser?.displayName ?: "Anonymous"
+
         selectedImageUri?.let { uri ->
             try {
                 // 로딩 표시 시작
@@ -184,22 +194,20 @@ class InputActivity : AppCompatActivity() {
                             if (downloadUrl.isNotEmpty()) {
                                 val postData = PostData(
                                     postId = UUID.randomUUID().toString(),
-                                    userId = "SampleUserId",
+                                    userId = userId, // 로그인한 유저의 UID 사용
                                     title = title,
                                     content = content,
                                     imagePath = downloadUrl, // 여기에서 이미 String으로 받음
-                                    userName = "Author Name",
+                                    userName = userName, // 로그인한 유저의 이름 사용
                                     category = binding.categoryEdit.text.toString(),
                                     commentCount = 0,
                                     likeCount = 0,
                                     viewCount = 0,
                                     time = System.currentTimeMillis().toString(),
-                                    comments = mutableListOf()
                                 )
 
                                 // Use the ViewModel to create the post
                                 viewModel.createPost(postData)
-
                                 // 화면 이동을 위한 코드 추가
                                 Toast.makeText(this, "게시글이 성공적으로 등록되었습니다.", Toast.LENGTH_SHORT).show()
                                 finish() // 현재 Activity 종료하여 이전 화면으로 돌아가기
@@ -216,6 +224,7 @@ class InputActivity : AppCompatActivity() {
             }
         }
     }
+
     private fun getImageDownloadUrl(imageRef: StorageReference, callback: (String) -> Unit) {
         // 비동기적으로 다운로드 URL 가져오기
         imageRef.downloadUrl.addOnSuccessListener { uri ->

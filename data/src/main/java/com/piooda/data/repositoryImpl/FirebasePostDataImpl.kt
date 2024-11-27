@@ -6,9 +6,11 @@ import com.google.firebase.storage.FirebaseStorage
 import com.piooda.data.model.Comment
 import com.piooda.data.model.PostData
 import com.piooda.data.repository.PostDataRepository
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.tasks.await
-import kotlinx.coroutines.withContext
+import java.util.UUID
 
 class PostDataRepositoryImpl(
     private val db: FirebaseFirestore,
@@ -17,195 +19,108 @@ class PostDataRepositoryImpl(
     private val postsCollection = db.collection("content")
     private val storageRef = firebaseStorage.reference
 
+    override fun createPost(postData: PostData): Flow<Boolean> = flow {
+        val postId = postData.postId // postId를 외부에서 생성하거나, 전달받은 값으로 설정
+        val postRef = postsCollection.document(postId) // 문서 ID로 postId 사용
+        postRef.set(postData) // 문서 생성, postId로 문서 ID가 설정됨
 
-    override suspend fun createPost(postData: PostData): Result<List<PostData>> {
-        return try {
-            // Firestore에 게시물 데이터 추가
-            val postRef = postsCollection.add(postData).await()
+        emit(true) // 작업 성공 시 true 발행
+    }.catch { throw it }
 
-            // 게시글 하위에 빈 'comments' 컬렉션 생성
 
-            val postId = postRef.id // 생성된 게시물의 ID
-
-            // Firestore에 하위 'comments' 컬렉션을 빈 문서로 초기화
-            val commentsCollection = postsCollection.document(postId).collection("comments")
-            commentsCollection.add(hashMapOf<String, Any>())
-
-            // 결과로 새로운 게시물 반환
-            val createdPost = postData.copy(postId = postId)
-            Result.success(listOf(createdPost))
-
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
+    override fun addCommentToPost(postId: String, comment: Comment): Flow<PostData> = flow {
+        val commentId = UUID.randomUUID().toString()
+        val commentsCollection = postsCollection.document(postId).collection("comments")
+        commentsCollection.document(commentId).set(comment).await()
+        val postSnapshot = postsCollection.document(postId).get().await()
+        val updatedPost = postSnapshot.toObject(PostData::class.java)
+            ?: throw Exception("Failed to retrieve updated post data")
+        postsCollection.document(postId).update("commentCount", updatedPost.commentCount + 1)
+            .await()
+        emit(updatedPost.copy(commentCount = updatedPost.commentCount + 1))
+    }.catch { e ->
+        Log.e("Repository", "Error adding comment: ${e.localizedMessage}", e)
+        throw e
     }
 
 
-    override suspend fun addCommentToPost(postId: String, comment: Comment): Boolean {
-        return try {
-            val commentsCollection = postsCollection.document(postId).collection("comments")
+    override fun getComments(postId: String): Flow<List<Comment>> = flow {
+        val commentsCollection = postsCollection.document(postId).collection("comments")
 
-            // postId를 사용해 commentsCollection을 참조
-            commentsCollection.add(comment).await()
-            true
-        } catch (e: Exception) {
-            Log.e("TAG:addCommentToPost", "Error adding comment: ${e.message}")
-            false
+        // Firestore에서 댓글 가져오기
+        val snapshot = commentsCollection.get().await()
+        Log.d("FirestoreDebug", "Fetched ${snapshot.documents.size} comments")
+
+        // 댓글 객체로 변환
+        val comments = snapshot.documents.mapNotNull { doc ->
+            val comment = doc.toObject(Comment::class.java)
+            Log.d("FirestoreDebug", "Comment: $comment")
+            comment
         }
+
+        emit(comments) // 댓글 리스트 반환
+    }.catch { e ->
+        Log.e("Firestore", "Error fetching comments: ${e.localizedMessage}", e)
+        emit(emptyList())
     }
 
-    override suspend fun getComments(postId: String): Result<MutableList<Comment>> {
-        val commentList = mutableListOf<Comment>()
-        return try {
-            Log.d("TAG:getComments", "Post ID: $postId")
 
-            val commentSnapshots = postsCollection
-                .document(postId)
-                .collection("comments")
-                .get()
-                .await()
+    override fun getPostById(postId: String): Flow<PostData> = flow {
+        val snapshot = postsCollection.document(postId).get().await()
+        if (!snapshot.exists()) throw Exception("Post not found")
 
-            Log.d("TAG:getComments", "Number of comments found: ${commentSnapshots.size()}")
+        val post = snapshot.toObject(PostData::class.java)
+            ?: throw Exception("Post data is null")
 
-            for (snapshot in commentSnapshots) {
-                val comment = snapshot.toObject(Comment::class.java)
-                Log.d("TAG:getComments", "Snapshot data: ${snapshot.data}")
-                Log.d("TAG:getComments", "Deserialized comment: $comment")
+        val imageUrl = getImageDownloadUrl(post.imagePath) ?: ""
+        val enrichedPost = post.copy(imagePath = imageUrl)
+        emit(enrichedPost)
+    }.catch { throw it }
 
-                commentList.add(comment)
-            }
-
-            Result.success(commentList)
-        } catch (e: Exception) {
-            Log.e("TAG:getComments", "Error getting comments for postId: $postId", e)
-            Result.failure(e)
-        }
+    override fun getAllPosts(): Flow<List<PostData>> = flow {
+        val snapshot = postsCollection.orderBy("time").get().await()
+        val posts = snapshot.toObjects(PostData::class.java)
+        val enrichedPosts =
+            posts.map { it.copy(imagePath = getImageDownloadUrl(it.imagePath) ?: "") }
+        emit(enrichedPosts)
+    }.catch {
+        throw it
     }
 
-    override suspend fun getPostById(postId: String): PostData {
-        Log.d(TAG, "Fetching post with ID: $postId")
+    override fun updatePost(postData: PostData): Flow<PostData> = flow {
+        postsCollection.document(postData.postId).set(postData).await()
+        emit(postData)
+    }.catch { throw it }
+
+    override fun deletePost(postId: String): Flow<Boolean> = flow {
+        val commentsCollection = postsCollection.document(postId).collection("comments")
+        val commentSnapshots = commentsCollection.get().await()
+        commentSnapshots.forEach { commentsCollection.document(it.id).delete().await() }
+
+        postsCollection.document(postId).delete().await()
+        emit(true)
+    }.catch { throw it }
+
+    override fun getPostsByTitle(title: String): Flow<List<PostData>> = flow {
+        val snapshot = postsCollection.whereEqualTo("title", title).get().await()
+        val posts = snapshot.toObjects(PostData::class.java)
+        emit(posts)
+    }.catch { throw it }
+
+    private suspend fun getImageDownloadUrl(imagePath: String): String? {
         return try {
-            val snapshot = postsCollection.document(postId).get().await()
-            if (snapshot.exists()) {
-                val post = snapshot.toObject(PostData::class.java)
-                    ?: throw Exception("Post data is null")
-                Log.d(TAG, "Snapshot exists: ${snapshot.exists()}")
-
-                // Firebase Storage에서 다운로드 URL 가져오기
-                val imageUrl = withContext(Dispatchers.IO) {
-                    getImageDownloadUrl((post.imagePath))
-                } ?: ""
-
-                // 댓글 가져오기
-                val comments = withContext(Dispatchers.IO) {
-                    getComments(postId).getOrNull()?.toMutableList()
-                } ?: mutableListOf()
-
-                // 데이터 복사
-                post.copy(imagePath = imageUrl, comments = comments)
+            if (imagePath.isBlank() || imagePath.startsWith("https://")) {
+                imagePath
             } else {
-                throw Exception("Post not found")
+                storageRef.child(imagePath).downloadUrl.await().toString()
             }
         } catch (e: Exception) {
-            Log.e(TAG, "Error fetching post: ${e.message}", e)
-            throw e
+            Log.e(TAG, "Error retrieving image URL for path: $imagePath", e)
+            null
         }
     }
-
-
-    override suspend fun getAllPosts(): Result<List<PostData>> {
-        return try {
-            val snapshot = postsCollection.orderBy("time").get().await()
-            val posts = snapshot.toObjects(PostData::class.java)
-
-            // 비동기적으로 모든 포스트에 대해 이미지 URL과 댓글 가져오기
-            val postsWithImagesAndComments = posts.map { post ->
-                withContext(Dispatchers.IO) {
-                    // 이미지 URL 가져오기 (null일 경우 기본값 설정)
-                    val imageUrl = getImageDownloadUrl(post.imagePath)
-
-                    // 댓글 가져오기
-                    val comments =
-                        getComments(post.postId).getOrNull()?.toMutableList() ?: mutableListOf()
-
-                    // 데이터 복사
-                    post.copy(imagePath = imageUrl.toString(), comments = comments)
-                }
-            }
-
-            Result.success(postsWithImagesAndComments)
-        } catch (e: Exception) {
-            Log.e(TAG, "Error fetching posts: ${e.message}", e)
-            Result.failure(e)
-        }
-    }
-
-    override suspend fun updatePost(postData: PostData): Boolean {
-        return try {
-            postsCollection.document(postData.postId).set(postData).await()
-            true
-        } catch (e: Exception) {
-            false
-        }
-    }
-    // Repository에서 Boolean 값 반환 -> Result로 변환
-    override suspend fun deletePost(postId: String): Result<Boolean> {
-        return try {
-            // 댓글 먼저 삭제
-            val commentsCollection = postsCollection.document(postId).collection("comments")
-            val commentSnapshots = commentsCollection.get().await()
-            for (comment in commentSnapshots) {
-                commentsCollection.document(comment.id).delete().await()
-            }
-            // 게시물 삭제
-            postsCollection.document(postId).delete().await()
-
-            Log.d("TAG:deletePost", "Deleted post with ID: $postId")  // 게시글 삭제 확인
-            Result.success(true)  // 성공 시 Result.success로 감싸서 반환
-        } catch (e: Exception) {
-            Log.e("TAG:deletePost", "Error deleting post with ID $postId: ${e.message}", e)
-            Result.failure(e)  // 실패 시 Result.failure로 감싸서 반환
-        }
-    }
-
-
-
-    override suspend fun getPostsByTitle(title: String): Result<List<PostData>> {
-        return try {
-            val snapshot = postsCollection.whereEqualTo("title", title).get().await()
-            val posts = snapshot.toObjects(PostData::class.java)
-            Result.success(posts)
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
-    }
-
-    private suspend fun getImageDownloadUrl(imagePath: String): String? =
-        withContext(Dispatchers.IO) {
-            try {
-                if (imagePath.isBlank()) {
-                    Log.e(TAG, "Image path is blank.")
-                    return@withContext null
-                }
-
-                // imagePath가 이미 다운로드 URL인지 확인
-                if (imagePath.startsWith("https://")) {
-                    Log.d(TAG, "Image path is already a download URL: $imagePath")
-                    return@withContext imagePath
-                }
-
-                // Storage 경로를 사용해 다운로드 URL 생성
-                val uri = storageRef.child(imagePath).downloadUrl.await()
-                Log.d(TAG, "Download URL retrieved: $uri")
-                uri.toString()
-            } catch (e: Exception) {
-                Log.e(TAG, "Error retrieving download URL for path: $imagePath", e)
-                null
-            }
-        }
-
 
     companion object {
-        private const val TAG = "Firebase"
+        private const val TAG = "PostDataRepositoryImpl"
     }
 }
