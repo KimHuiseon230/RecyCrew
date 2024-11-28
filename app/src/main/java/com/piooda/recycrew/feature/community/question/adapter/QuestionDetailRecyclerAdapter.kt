@@ -1,5 +1,6 @@
 package com.piooda.recycrew.feature.community.question.adapter
 
+import android.app.AlertDialog
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -9,17 +10,19 @@ import com.bumptech.glide.Glide
 import com.piooda.data.model.PostData
 import com.piooda.recycrew.databinding.ItemPostBinding
 
-class QuestionDetailRecyclerAdapter() :
-    ListAdapter<PostData, QuestionDetailRecyclerAdapter.PostViewHolder>(PostDiffCallback()) {
+class QuestionDetailRecyclerAdapter(
+    private val onEditClick: (PostData) -> Unit,   // 수정 클릭 이벤트 처리
+    private val onDeleteClick: (PostData) -> Unit,  // 삭제 클릭 이벤트 처리
+) : ListAdapter<PostData, QuestionDetailRecyclerAdapter.ViewHolder>(PostDiffCallback()) {
 
     // 아이템 뷰 홀더를 생성하는 함수
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = ItemPostBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return PostViewHolder(binding)
+        return ViewHolder(binding, onEditClick, onDeleteClick)
     }
 
     // 뷰 홀더에 데이터를 바인딩하는 함수
-    override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val post = getItem(position)  // ListAdapter에서는 getItem()을 사용하여 데이터에 접근합니다.
         holder.bind(post)
     }
@@ -29,18 +32,37 @@ class QuestionDetailRecyclerAdapter() :
         currentList.size  // currentList는 ListAdapter에서 자동으로 제공되는 리스트입니다.
 
     // 뷰 홀더 클래스
-    inner class PostViewHolder(private val binding: ItemPostBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+    class ViewHolder(
+        private val binding: ItemPostBinding,
+        private val onEditClick: (PostData) -> Unit,
+        private val onDeleteClick: (PostData) -> Unit,
+    ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(post: PostData) {
             binding.tvTitle.text = post.title
             binding.postContent.text = post.content
             Glide.with(binding.root.context)
                 .load(post.imagePath)
                 .into(binding.imagePath)
-            // 필요한 경우 클릭 이벤트 처리
 
+            // 옵션 버튼 클릭 시 다이얼로그 표시
             binding.btnOptions.setOnClickListener {
+                showOptionsDialog(post)
             }
+        }
+
+        // 옵션 다이얼로그를 띄우는 메소드
+        private fun showOptionsDialog(postData: PostData) {
+            val context = binding.root.context
+            val dialog = AlertDialog.Builder(context)
+                .setItems(arrayOf("수정", "삭제")) { _, which ->
+                    when (which) {
+                        0 -> onEditClick(postData)  // 수정 클릭 시 onEditClick 호출
+                        1 -> onDeleteClick(postData)  // 삭제 클릭 시 onDeleteClick 호출
+                    }
+                }
+                .create()
+
+            dialog.show()
         }
     }
 

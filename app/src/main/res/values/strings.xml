@@ -99,9 +99,6 @@
     <string name="send_button">Send</string>
     <string name="attendance_check">출석인증</string>
 
-
-
-
     <!-- fragment_notice.xml -->
     <string name="faq_text_title">급식 메뉴</string>
     <string name="faq_text_description">오늘 급식 메뉴는 뭔가요?</string>

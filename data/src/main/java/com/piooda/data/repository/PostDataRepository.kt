@@ -7,9 +7,9 @@ import kotlinx.coroutines.flow.Flow
 interface PostDataRepository {
     fun createPost(postData: PostData): Flow<Boolean>
     fun deletePost(postId: String): Flow<Boolean>
+    fun updatePost(postData: PostData): Flow<Boolean>
     fun getPostById(postId: String): Flow<PostData>
     fun getAllPosts(): Flow<List<PostData>>
-    fun updatePost(postData: PostData): Flow<PostData>
     fun getPostsByTitle(title: String): Flow<List<PostData>>
     fun addCommentToPost(postId: String, comment: Comment): Flow<PostData>
     fun getComments(postId: String): Flow<List<Comment>>

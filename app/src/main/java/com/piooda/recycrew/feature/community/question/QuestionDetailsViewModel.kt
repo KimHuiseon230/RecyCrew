@@ -17,61 +17,82 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 
 class QuestionDetailsViewModel(private val repository: PostDataRepository) : ViewModel() {
-        // StateFlow로 UI 상태 관리
-        private val _postState = MutableStateFlow<UiState<PostData>>(UiState.Loading)
-        private val _commentsState = MutableStateFlow<UiState<List<Comment>?>>(UiState.Loading)
-        val postState = _postState.asStateFlow()
-        val commentsState = _commentsState.asStateFlow()
+    // StateFlow로 UI 상태 관리
+    private val _postState = MutableStateFlow<UiState<PostData>>(UiState.Loading)
+    private val _commentsState = MutableStateFlow<UiState<List<Comment>?>>(UiState.Loading)
+    val postState = _postState.asStateFlow()
+    val commentsState = _commentsState.asStateFlow()
 
-        // 게시글만 로드
-        private suspend fun loadPost(postId: String) {
-            repository.getPostById(postId)
+    // 게시글 수정
+    fun updatePost(postData: PostData) {
+        viewModelScope.launch {
+            repository.updatePost(postData)
                 .flowOn(Dispatchers.IO)
                 .catch { e -> _postState.value = UiState.Error(e) }
-                .collectLatest { post ->
-                    _postState.value = UiState.Success(post)
-                }
+                .collect { success -> _postState.value = UiState.Success(postData) }
         }
-        // 댓글만 로드
-        private suspend fun getComments(postId: String) {
-            repository.getComments(postId)
-                .flowOn(Dispatchers.IO)
-                .catch { e -> _commentsState.value = UiState.Error(e) }
-                .collectLatest { comments ->
-                    _commentsState.value = UiState.Success(comments)
-                }
-        }
+    }
 
-        // 게시글과 댓글을 동시에 로드하는 함수
-        fun loadPostAndComments(postId: String) {
-            viewModelScope.launch {
-                try {
-                    // 게시물과 댓글 로드를 동시에 처리
-                    val postFlow = async { loadPost(postId) }
-                    val commentsFlow = async { getComments(postId) }
-                    postFlow.await()
-                    commentsFlow.await() // 댓글 데이터도 처리되어야 함
-                } catch (e: Exception) {
-                    Log.e("QuestionDetailsViewModel", "Error loading post and comments", e)
-                }
+    // 게시글 삭제
+    fun deletePost(postId: String) {
+        viewModelScope.launch {
+            repository.deletePost(postId)
+                .flowOn(Dispatchers.IO)
+                .catch { e -> _postState.value = UiState.Error(e) }
+                .collect { success -> _postState.value = UiState.Empty }
+        }
+    }
+
+    // 게시글만 로드
+    private suspend fun loadPost(postId: String) {
+        repository.getPostById(postId)
+            .flowOn(Dispatchers.IO)
+            .catch { e -> _postState.value = UiState.Error(e) }
+            .collectLatest { post ->
+                _postState.value = UiState.Success(post)
+            }
+    }
+
+    // 댓글만 로드
+    private suspend fun getComments(postId: String) {
+        repository.getComments(postId)
+            .flowOn(Dispatchers.IO)
+            .catch { e -> _commentsState.value = UiState.Error(e) }
+            .collectLatest { comments ->
+                _commentsState.value = UiState.Success(comments)
+            }
+    }
+
+    // 게시글과 댓글을 동시에 로드하는 함수
+    fun loadPostAndComments(postId: String) {
+        viewModelScope.launch {
+            try {
+                // 게시물과 댓글 로드를 동시에 처리
+                val postFlow = async { loadPost(postId) }
+                val commentsFlow = async { getComments(postId) }
+                postFlow.await()
+                commentsFlow.await() // 댓글 데이터도 처리되어야 함
+            } catch (e: Exception) {
+                Log.e("QuestionDetailsViewModel", "Error loading post and comments", e)
             }
         }
+    }
 
     // 게시글 생성
-        fun createPost(postData: PostData) {
-            viewModelScope.launch {
-                repository.createPost(postData)
-                    .flowOn(Dispatchers.IO)
-                    .catch { e -> _postState.value = UiState.Error(e) }
-                    .collect { isSuccessful ->
-                        if (isSuccessful) {
-                            _postState.value = UiState.Success(postData)
-                        } else {
-                            _postState.value = UiState.Error(Exception("게시글 생성 실패"))
-                        }
+    fun createPost(postData: PostData) {
+        viewModelScope.launch {
+            repository.createPost(postData)
+                .flowOn(Dispatchers.IO)
+                .catch { e -> _postState.value = UiState.Error(e) }
+                .collect { isSuccessful ->
+                    if (isSuccessful) {
+                        _postState.value = UiState.Success(postData)
+                    } else {
+                        _postState.value = UiState.Error(Exception("게시글 생성 실패"))
                     }
-            }
+                }
         }
+    }
 
     fun addCommentToPost(postId: String, comment: Comment) {
         viewModelScope.launch {
@@ -100,5 +121,4 @@ class QuestionDetailsViewModel(private val repository: PostDataRepository) : Vie
                 }
         }
     }
-
 }

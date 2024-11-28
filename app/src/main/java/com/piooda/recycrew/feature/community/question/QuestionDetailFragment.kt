@@ -1,5 +1,6 @@
 package com.piooda.recycrew.feature.community.question
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -66,14 +67,26 @@ class QuestionDetailFragment :
                 Log.d("addCommentToPost", "Comment field is empty")
             }
         }
+        // 삭제 및 수정 구현 코드 라인
+
     }
 
     private fun concatAdapter() {
-        postAdapter = QuestionDetailRecyclerAdapter().apply { submitList(listOf(postData)) }
+        postAdapter = QuestionDetailRecyclerAdapter(
+            onEditClick = { navigateToEditPost(postData) },
+            onDeleteClick = { viewModel.deletePost(postData.postId) }
+        ).apply { submitList(listOf(postData)) }
         commentAdapter = QuestionCommentRecyclerAdapter().apply { submitList(emptyList()) }
         binding.rvQuestionDetail.adapter = ConcatAdapter(postAdapter, commentAdapter)
     }
 
+    fun navigateToEditPost(postData: PostData) {
+        // 포스트 수정 화면으로 네비게이션
+        val intent = Intent(context, QuestionPostEditActivity::class.java).apply {
+            putExtra("postData", postData) // postData는 Parcelable
+        }
+        startActivity(intent)
+    }
     private fun observePostData() {
         viewLifecycleOwner.lifecycleScope.launch {
             val progressBar = binding.progressBar
@@ -86,6 +99,7 @@ class QuestionDetailFragment :
                             is UiState.Loading -> {
                                 progressBar.visibility = View.VISIBLE
                             }
+
                             is UiState.Success -> {
                                 progressBar.visibility = View.GONE
                                 uiState.resultData?.let { post ->
@@ -95,13 +109,19 @@ class QuestionDetailFragment :
                                     viewModel.loadPostAndComments(post.postId)
                                 }
                             }
+
                             is UiState.Error -> {
                                 progressBar.visibility = View.GONE
                                 Log.e("PostData", "Error fetching post data: ${uiState.exception}")
                             }
+
                             UiState.Empty -> {
                                 progressBar.visibility = View.GONE
-                                Toast.makeText(requireContext(), "No data available", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(
+                                    requireContext(),
+                                    "No data available",
+                                    Toast.LENGTH_SHORT
+                                ).show()
                             }
                         }
                     }
@@ -113,14 +133,20 @@ class QuestionDetailFragment :
                             is UiState.Loading -> {
                                 // 댓글 로딩 중 처리 (선택적으로 로딩 표시)
                             }
+
                             is UiState.Success -> {
                                 // 댓글 성공 시 commentAdapter에 리스트 제출
                                 commentAdapter.submitList(uiState.resultData)
                             }
+
                             is UiState.Error -> {
                                 // 댓글 로딩 오류 처리
-                                Log.e("CommentData", "Error fetching comments: ${uiState.exception.message}")
+                                Log.e(
+                                    "CommentData",
+                                    "Error fetching comments: ${uiState.exception.message}"
+                                )
                             }
+
                             UiState.Empty -> {
                                 // 댓글이 없을 때 처리
                                 Log.d("CommentData", "No comments available")

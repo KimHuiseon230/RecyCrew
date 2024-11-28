@@ -23,7 +23,6 @@ class PostDataRepositoryImpl(
         val postId = postData.postId // postId를 외부에서 생성하거나, 전달받은 값으로 설정
         val postRef = postsCollection.document(postId) // 문서 ID로 postId 사용
         postRef.set(postData) // 문서 생성, postId로 문서 ID가 설정됨
-
         emit(true) // 작업 성공 시 true 발행
     }.catch { throw it }
 
@@ -87,19 +86,36 @@ class PostDataRepositoryImpl(
         throw it
     }
 
-    override fun updatePost(postData: PostData): Flow<PostData> = flow {
-        postsCollection.document(postData.postId).set(postData).await()
-        emit(postData)
-    }.catch { throw it }
+    override fun updatePost(postData: PostData): Flow<Boolean> = flow {
+        val postRef = postsCollection.document(postData.postId)
+        val postMap = mapOf(
+            "title" to postData.title,
+            "content" to postData.content,
+            "updatedAt" to System.currentTimeMillis() // 수정 시간 추가
+        )
+
+        postRef.update(postMap).await() // Firestore에 Map 데이터를 업데이트
+        emit(true) // 성공 시 true 발행
+    }.catch { exception ->
+        emit(false) // 실패 시 false 발행
+        throw exception
+    }
+
 
     override fun deletePost(postId: String): Flow<Boolean> = flow {
-        val commentsCollection = postsCollection.document(postId).collection("comments")
-        val commentSnapshots = commentsCollection.get().await()
-        commentSnapshots.forEach { commentsCollection.document(it.id).delete().await() }
-
-        postsCollection.document(postId).delete().await()
-        emit(true)
-    }.catch { throw it }
+        val postRef = postsCollection.document(postId)
+        // 문서가 존재하는지 확인하고 삭제 작업 수행
+        val documentSnapshot = postRef.get().await()
+        if (documentSnapshot.exists()) {
+            postRef.delete() // delete()를 사용해 문서 삭제
+            emit(true) // 삭제 성공 시 true 발행
+        } else {
+            emit(false) // 문서가 없으면 false 발행
+        }
+    }.catch { exception ->
+        emit(false) // 예외 발생 시 false 발행
+        throw exception
+    }
 
     override fun getPostsByTitle(title: String): Flow<List<PostData>> = flow {
         val snapshot = postsCollection.whereEqualTo("title", title).get().await()
