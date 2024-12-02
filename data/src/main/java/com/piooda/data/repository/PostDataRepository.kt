@@ -8,6 +8,7 @@ interface PostDataRepository {
     fun createPost(postData: PostData): Flow<Boolean>
     fun deletePost(postId: String): Flow<Boolean>
     fun updatePost(postData: PostData): Flow<Boolean>
+    fun postdateLikeCount(postId: String, isLiked: Boolean): Flow<Boolean>
     fun getPostById(postId: String): Flow<PostData>
     fun getAllPosts(): Flow<List<PostData>>
     fun getPostsByTitle(title: String): Flow<List<PostData>>

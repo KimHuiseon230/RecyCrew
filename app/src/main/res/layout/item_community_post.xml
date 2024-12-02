@@ -74,8 +74,7 @@
         android:id="@+id/flowActions"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:constraint_referenced_ids="tvCommentCount,tvLikeCount"
-        app:flow_horizontalGap="8dp"
+        app:constraint_referenced_ids="tvCommentCount,ic_Like,tvLikeCount"
         app:flow_wrapMode="none" />
 
     <com.google.android.material.textview.MaterialTextView
@@ -86,13 +85,17 @@
         android:drawablePadding="4dp"
         android:text="@string/community_text_count"
         android:textColor="@color/Primary_Color" />
-
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/ic_Like"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_baseline_favorite_24"
+        />
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/tvLikeCount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:drawableLeft="@drawable/ic_baseline_favorite_24"
         android:text="@string/community_text_count"
         android:textColor="@color/red" />
 </androidx.constraintlayout.widget.ConstraintLayout>

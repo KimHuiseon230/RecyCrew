@@ -19,6 +19,41 @@ class PostDataRepositoryImpl(
     private val postsCollection = db.collection("content")
     private val storageRef = firebaseStorage.reference
 
+
+    override fun postdateLikeCount(postId: String, isLiked: Boolean): Flow<Boolean> = flow {
+        val postRef = postsCollection.document(postId)
+
+        try {
+            db.runTransaction { transaction ->
+                val snapshot = transaction.get(postRef)
+                val currentLikeCount = snapshot.getLong("likeCount")?.toInt() ?: 0
+                val currentUserLiked = snapshot.getBoolean("userLiked") ?: false
+
+                // 상태 변경 로직 개선
+                val newLikeCount = if (currentUserLiked != isLiked) {
+                    if (isLiked) currentLikeCount + 1 else (currentLikeCount - 1).coerceAtLeast(0)
+                } else {
+                    currentLikeCount
+                }
+
+                // 좋아요 상태와 카운트 함께 업데이트
+                transaction.update(
+                    postRef,
+                    mapOf(
+                        "likeCount" to newLikeCount,
+                        "userLiked" to isLiked
+                    )
+                )
+            }.await()
+
+            emit(true) // 작업 성공
+        } catch (e: Exception) {
+            emit(false) // 작업 실패
+            throw e
+        }
+    }
+
+
     override fun createPost(postData: PostData): Flow<Boolean> = flow {
         val postId = postData.postId // postId를 외부에서 생성하거나, 전달받은 값으로 설정
         val postRef = postsCollection.document(postId) // 문서 ID로 postId 사용
@@ -79,8 +114,15 @@ class PostDataRepositoryImpl(
     override fun getAllPosts(): Flow<List<PostData>> = flow {
         val snapshot = postsCollection.orderBy("time").get().await()
         val posts = snapshot.toObjects(PostData::class.java)
+
         val enrichedPosts =
-            posts.map { it.copy(imagePath = getImageDownloadUrl(it.imagePath) ?: "") }
+            posts.map {
+                it.copy(
+                    imagePath = getImageDownloadUrl(it.imagePath) ?: "",
+                    commentCount = it.commentCount,
+                    likeCount = it.likeCount
+                )
+            }
         emit(enrichedPosts)
     }.catch {
         throw it

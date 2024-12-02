@@ -13,10 +13,11 @@ data class PostData(
     val userName: String = "",
     val category: String = "",
     val commentCount: Int = 0,
-    val likeCount: Int = 0,
+    var likeCount: Int = 0,
     val viewCount: Int = 0,
     val time: String = "",
-    ) : Parcelable
+    var isLiked: Boolean = false,
+) : Parcelable
 
 
 

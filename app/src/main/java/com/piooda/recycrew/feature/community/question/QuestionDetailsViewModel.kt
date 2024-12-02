@@ -23,6 +23,7 @@ class QuestionDetailsViewModel(private val repository: PostDataRepository) : Vie
     val postState = _postState.asStateFlow()
     val commentsState = _commentsState.asStateFlow()
 
+
     // 게시글 수정
     fun updatePost(postData: PostData) {
         viewModelScope.launch {

@@ -67,8 +67,6 @@ class QuestionDetailFragment :
                 Log.d("addCommentToPost", "Comment field is empty")
             }
         }
-        // 삭제 및 수정 구현 코드 라인
-
     }
 
     private fun concatAdapter() {
