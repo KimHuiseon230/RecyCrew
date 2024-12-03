@@ -27,15 +27,12 @@ class QuestionCommentRecyclerAdapter :
             binding.apply {
                 userName.text = comment.author
                 commentText.text = comment.content
-                // You can add timestamp if necessary:
-                // commentTimestamp.text = comment.timestamp.toString()
             }
         }
     }
 
     class CommentDiffCallback : DiffUtil.ItemCallback<Comment>() {
         override fun areItemsTheSame(oldItem: Comment, newItem: Comment): Boolean {
-            // Assuming Comment has a unique identifier, e.g., commentId
             return oldItem.content == newItem.content
         }
 

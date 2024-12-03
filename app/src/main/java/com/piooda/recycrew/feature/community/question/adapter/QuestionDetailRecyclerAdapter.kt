@@ -23,13 +23,13 @@ class QuestionDetailRecyclerAdapter(
 
     // 뷰 홀더에 데이터를 바인딩하는 함수
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val post = getItem(position)  // ListAdapter에서는 getItem()을 사용하여 데이터에 접근합니다.
+        val post = getItem(position)
         holder.bind(post)
     }
 
     // 데이터 아이템 개수를 반환하는 함수
     override fun getItemCount(): Int =
-        currentList.size  // currentList는 ListAdapter에서 자동으로 제공되는 리스트입니다.
+        currentList.size
 
     // 뷰 홀더 클래스
     class ViewHolder(

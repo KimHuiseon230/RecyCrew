@@ -38,9 +38,7 @@ class QuestionRecyclerAdapter(
 
             // 좋아요 상태에 따라 UI 업데이트
             updateLikeButtonUI(item.isLiked)
-            // 좋아요 버튼 클릭 시
             binding.icLike.setOnClickListener {
-                // 상태 변경
                 item.isLiked = !item.isLiked
                 // 좋아요 숫자 변경 (최소 0으로 제한)
                 item.likeCount = (if (item.isLiked) item.likeCount + 1 else item.likeCount - 1).coerceAtLeast(0)
@@ -73,7 +71,6 @@ class QuestionRecyclerAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        // adapter에 데이터를 전달할 때, item과 item2를 각각 전달
         val postData = getItem(position)  // PostData
 
         holder.bind(postData)  // PostData와 Comment를 함께 bind

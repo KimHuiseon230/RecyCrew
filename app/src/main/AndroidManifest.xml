@@ -52,7 +52,7 @@
             android:theme="@style/Theme.RecyCrew" />
         <activity
             android:name=".feature.MainActivity"
-            android:exported="false"></activity>
+            android:exported="false"/>
 
         <meta-data
             android:name="com.google.android.gms.version"

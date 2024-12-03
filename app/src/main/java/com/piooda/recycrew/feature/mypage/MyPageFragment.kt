@@ -5,7 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.piooda.data.model.UserProfile
@@ -48,28 +50,34 @@ class MyPageFragment : BaseFragment<FragmentMypageBinding>(FragmentMypageBinding
 
     private fun collectLoadUserProfile() {
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.loadUserProfileState.collectLatest { state ->
-                when (state) {
-                    is UiState.Loading -> {
-                        logDebug("UserProfile", R.string.loading_user_profile)
-                    }
-
-                    is UiState.Success -> {
-                        userProfile = state.resultData
-                        updateUIWithUserProfile(userProfile)
-                        setupNavigationListeners(userProfile)
-                    }
-
-                    is UiState.Error -> {
-                        logError("UserProfile", R.string.failure_loading_user_profile, state.exception)
-                        updateUIWithUserProfile(null)
-                    }
-
-                    is UiState.Empty -> {
-                        logDebug("UserProfile", R.string.empty_user_profile)
-                        updateUIWithUserProfile(null)
-                    }
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.loadUserProfileState.collectLatest { state ->
+                    handleUserProfileState(state)
                 }
+            }
+        }
+    }
+
+    private fun handleUserProfileState(state: UiState<UserProfile>) {
+        when (state) {
+            is UiState.Loading -> {
+                logDebug("UserProfile", R.string.loading_user_profile)
+            }
+
+            is UiState.Success -> {
+                userProfile = state.resultData
+                updateUIWithUserProfile(userProfile)
+                setupNavigationListeners(userProfile)
+            }
+
+            is UiState.Error -> {
+                logError("UserProfile", R.string.failure_loading_user_profile, state.exception)
+                updateUIWithUserProfile(null)
+            }
+
+            is UiState.Empty -> {
+                logDebug("UserProfile", R.string.empty_user_profile)
+                updateUIWithUserProfile(null)
             }
         }
     }

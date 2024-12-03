@@ -73,7 +73,6 @@ dependencies {
     implementation(libs.androidx.storage)
     implementation(libs.firebase.storage.ktx)
     implementation(libs.google.firebase.firestore)
-    implementation(project(":data"))
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -91,4 +90,5 @@ dependencies {
 
     implementation(project(":data"))
     implementation(project(":common"))
+    tasks.register("prepareKotlinBuildScriptModel"){}
 }

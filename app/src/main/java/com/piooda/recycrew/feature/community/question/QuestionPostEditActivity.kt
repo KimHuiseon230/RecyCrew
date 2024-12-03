@@ -6,7 +6,9 @@ import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.bumptech.glide.Glide
 import com.piooda.data.model.PostData
 import com.piooda.recycrew.common.UiState
@@ -32,10 +34,13 @@ class QuestionPostEditActivity : AppCompatActivity() {
         // 기존 데이터 UI에 반영
         setupUI(postData)
 
-        // 수정 버튼 클릭 시
+        // 수정 버튼 클릭 이벤트 처리
         binding.confirmButton.setOnClickListener {
             updatePostData()
         }
+
+        // 상태 관찰
+        observePostUpdate()
     }
 
     private fun setupUI(postData: PostData) {
@@ -48,11 +53,11 @@ class QuestionPostEditActivity : AppCompatActivity() {
     }
 
     private fun updatePostData() {
-        // 사용자가 수정한 데이터 가져오기
+        // 사용자가 입력한 데이터 가져오기
         val updatedTitle = binding.titleEdit.text.toString().trim()
         val updatedContent = binding.contentEdit.text.toString().trim()
 
-        // 필수값 검증 (예: 제목이나 내용이 비어 있으면 실패 처리)
+        // 필수값 검증
         if (updatedTitle.isBlank() || updatedContent.isBlank()) {
             Toast.makeText(this, "제목과 내용을 모두 입력해주세요.", Toast.LENGTH_SHORT).show()
             return
@@ -67,50 +72,41 @@ class QuestionPostEditActivity : AppCompatActivity() {
         // ViewModel로 수정 요청
         viewModel.updatePost(updatedPost)
 
-        // UI 처리 (수정 요청이 완료되기 전까지 버튼 비활성화 등)
+        // UI 처리 (수정 요청 진행 중 버튼 비활성화)
         binding.confirmButton.isEnabled = false
-
-        // 상태를 관찰하여 UI 업데이트
-        observePostUpdate()
     }
 
     private fun observePostUpdate() {
         lifecycleScope.launch {
-            viewModel.postState.collect { state ->
-                when (state) {
-                    is UiState.Loading -> {
-                        // 로딩 중 UI 처리
-                        binding.progressBar.visibility = View.VISIBLE
-                    }
-
-                    is UiState.Success -> {
-                        // 수정 성공
-                        binding.progressBar.visibility = View.GONE
-                        Toast.makeText(
-                            this@QuestionPostEditActivity,
-                            "수정되었습니다.",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                        finish() // 수정 후 화면 종료
-                    }
-
-                    is UiState.Error -> {
-                        // 에러 발생
-                        binding.progressBar.visibility = View.GONE
-                        binding.confirmButton.isEnabled = true
-                        Toast.makeText(
-                            this@QuestionPostEditActivity,
-                            "수정 실패: ${state.exception.message}",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                        Log.e("observePostUpdate", "observePostUpdate: ${state.exception.message}")
-
-                    }
-
-                    else -> Unit
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.postState.collect { state ->
+                    handlePostUpdateState(state)
                 }
             }
         }
     }
 
+    private fun handlePostUpdateState(state: UiState<PostData>) {
+        when (state) {
+            is UiState.Loading -> {
+                binding.progressBar.visibility = View.VISIBLE
+            }
+            is UiState.Success -> {
+                binding.progressBar.visibility = View.GONE
+                Toast.makeText(this, "수정되었습니다.", Toast.LENGTH_SHORT).show()
+                finish() // 수정 완료 후 화면 종료
+            }
+            is UiState.Error -> {
+                binding.progressBar.visibility = View.GONE
+                binding.confirmButton.isEnabled = true
+                Toast.makeText(
+                    this,
+                    "수정 실패: ${state.exception.message}",
+                    Toast.LENGTH_SHORT
+                ).show()
+                Log.e("PostUpdate", "Error: ${state.exception.message}")
+            }
+            else -> Unit
+        }
+    }
 }

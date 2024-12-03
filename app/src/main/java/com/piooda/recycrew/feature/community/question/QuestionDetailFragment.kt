@@ -8,7 +8,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.ConcatAdapter
 import com.google.firebase.Timestamp
@@ -87,75 +89,68 @@ class QuestionDetailFragment :
     }
     private fun observePostData() {
         viewLifecycleOwner.lifecycleScope.launch {
-            val progressBar = binding.progressBar
-            progressBar.visibility = View.GONE
-            try {
-                // 게시글과 댓글 상태를 동시에 처리
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                val progressBar = binding.progressBar
+
+                // 게시글 상태 관찰
                 launch {
                     viewModel.postState.collect { uiState ->
-                        when (uiState) {
-                            is UiState.Loading -> {
-                                progressBar.visibility = View.VISIBLE
-                            }
-
-                            is UiState.Success -> {
-                                progressBar.visibility = View.GONE
-                                uiState.resultData?.let { post ->
-                                    // 게시글 데이터를 postAdapter에 제출
-                                    postAdapter.submitList(listOf(post))
-                                    // 댓글 로드
-                                    viewModel.loadPostAndComments(post.postId)
-                                }
-                            }
-
-                            is UiState.Error -> {
-                                progressBar.visibility = View.GONE
-                                Log.e("PostData", "Error fetching post data: ${uiState.exception}")
-                            }
-
-                            UiState.Empty -> {
-                                progressBar.visibility = View.GONE
-                                Toast.makeText(
-                                    requireContext(),
-                                    "No data available",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            }
-                        }
+                        handlePostState(uiState, progressBar)
                     }
                 }
 
+                // 댓글 상태 관찰
                 launch {
                     viewModel.commentsState.collect { uiState ->
-                        when (uiState) {
-                            is UiState.Loading -> {
-                                // 댓글 로딩 중 처리 (선택적으로 로딩 표시)
-                            }
-
-                            is UiState.Success -> {
-                                // 댓글 성공 시 commentAdapter에 리스트 제출
-                                commentAdapter.submitList(uiState.resultData)
-                            }
-
-                            is UiState.Error -> {
-                                // 댓글 로딩 오류 처리
-                                Log.e(
-                                    "CommentData",
-                                    "Error fetching comments: ${uiState.exception.message}"
-                                )
-                            }
-
-                            UiState.Empty -> {
-                                // 댓글이 없을 때 처리
-                                Log.d("CommentData", "No comments available")
-                            }
-                        }
+                        handleCommentsState(uiState)
                     }
                 }
+            }
+        }
+    }
 
-            } catch (e: Exception) {
-                Log.e("PostData", "Unexpected error: ${e.message}")
+    private fun handlePostState(uiState: UiState<PostData>, progressBar: View) {
+        when (uiState) {
+            is UiState.Loading -> {
+                progressBar.visibility = View.VISIBLE
+            }
+
+            is UiState.Success -> {
                 progressBar.visibility = View.GONE
+                uiState.resultData?.let { post ->
+                    postAdapter.submitList(listOf(post))
+                    viewModel.loadPostAndComments(post.postId)
+                }
+            }
+
+            is UiState.Error -> {
+                progressBar.visibility = View.GONE
+                Log.e("PostData", "Error fetching post data: ${uiState.exception}")
+            }
+
+            UiState.Empty -> {
+                progressBar.visibility = View.GONE
+                Toast.makeText(requireContext(), "No data available", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun handleCommentsState(uiState: UiState<List<Comment>?>) {
+        when (uiState) {
+            is UiState.Loading -> {
+                // 선택적으로 로딩 처리
+            }
+
+            is UiState.Success -> {
+                commentAdapter.submitList(uiState.resultData)
+            }
+
+            is UiState.Error -> {
+                Log.e("CommentData", "Error fetching comments: ${uiState.exception.message}")
+            }
+
+            UiState.Empty -> {
+                Log.d("CommentData", "No comments available")
             }
         }
     }
