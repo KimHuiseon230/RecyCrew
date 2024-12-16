@@ -70,7 +70,7 @@ class QuestionFragment : BaseFragment<FragmentQuestionBinding>(FragmentQuestionB
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch { collectPostState() }
-                launch { collectLikeState() }
+//                launch { collectLikeState() }
             }
         }
     }
