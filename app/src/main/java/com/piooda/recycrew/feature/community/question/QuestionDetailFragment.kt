@@ -34,8 +34,7 @@ class QuestionDetailFragment :
 
     private lateinit var postAdapter: QuestionDetailRecyclerAdapter
     private lateinit var commentAdapter: QuestionCommentRecyclerAdapter
-    private val args: QuestionDetailFragmentArgs by navArgs()  // 자동으로 생성된 NavArgs 클래스
-
+    private val args: QuestionDetailFragmentArgs by navArgs()  
     private val postData: PostData by lazy { args.detailedQuestPostData }
 
     override fun onCreateView(

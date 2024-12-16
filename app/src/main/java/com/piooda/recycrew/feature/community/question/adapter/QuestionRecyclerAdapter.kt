@@ -1,5 +1,6 @@
 package com.piooda.recycrew.feature.community.question.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -10,7 +11,6 @@ import com.piooda.data.model.PostData
 import com.piooda.recycrew.R
 import com.piooda.recycrew.databinding.ItemCommunityPostBinding
 
-//첫리사이클러뷰 목록가져오기
 class QuestionRecyclerAdapter(
     private val onClick: (PostData) -> Unit,
     private val onLikeClick: (PostData) -> Unit, // onLikeClick 콜백 추가
@@ -46,6 +46,7 @@ class QuestionRecyclerAdapter(
                 updateLikeButtonUI(item.isLiked)
                 // 부모로 변경 사항 전달
                 onLikeClick(item)
+                Log.e("QuestionRecyclerAdapter","${item}")
             }
 
             // 클릭 시 item과 item2(PostData와 Comment) 둘 다 전달
@@ -73,7 +74,7 @@ class QuestionRecyclerAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val postData = getItem(position)  // PostData
 
-        holder.bind(postData)  // PostData와 Comment를 함께 bind
+        holder.bind(postData)
     }
 
     class DiffCallback : DiffUtil.ItemCallback<PostData>() {
