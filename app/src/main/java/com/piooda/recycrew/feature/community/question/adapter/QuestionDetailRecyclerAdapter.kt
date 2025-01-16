@@ -1,19 +1,21 @@
 package com.piooda.recycrew.feature.community.question.adapter
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.piooda.data.model.PostData
+import com.piooda.data.model.Content
 import com.piooda.recycrew.databinding.ItemPostBinding
 
 class QuestionDetailRecyclerAdapter(
-    private val onEditClick: (PostData) -> Unit,   // 수정 클릭 이벤트 처리
-    private val onDeleteClick: (PostData) -> Unit,  // 삭제 클릭 이벤트 처리
-) : ListAdapter<PostData, QuestionDetailRecyclerAdapter.ViewHolder>(PostDiffCallback()) {
+    private val onEditClick: (Content) -> Unit,   // 수정 클릭 이벤트 처리
+    private val onDeleteClick: (Content) -> Unit,  // 삭제 클릭 이벤트 처리
+) : ListAdapter<Content, QuestionDetailRecyclerAdapter.ViewHolder>(DiffCallback()) {
 
     // 아이템 뷰 홀더를 생성하는 함수
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -34,15 +36,15 @@ class QuestionDetailRecyclerAdapter(
     // 뷰 홀더 클래스
     class ViewHolder(
         private val binding: ItemPostBinding,
-        private val onEditClick: (PostData) -> Unit,
-        private val onDeleteClick: (PostData) -> Unit,
+        private val onEditClick: (Content) -> Unit,
+        private val onDeleteClick: (Content) -> Unit,
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(post: PostData) {
+        fun bind(post: Content) {
             binding.tvTitle.text = post.title
             binding.postContent.text = post.content
-            Glide.with(binding.root.context)
-                .load(post.imagePath)
-                .into(binding.imagePath)
+//            Glide.with(binding.root.context)
+//                .load(post.imagePath)
+//                .into(binding.imagePath)
 
             // 옵션 버튼 클릭 시 다이얼로그 표시
             binding.btnOptions.setOnClickListener {
@@ -51,13 +53,13 @@ class QuestionDetailRecyclerAdapter(
         }
 
         // 옵션 다이얼로그를 띄우는 메소드
-        private fun showOptionsDialog(postData: PostData) {
+        private fun showOptionsDialog(content: Content) {
             val context = binding.root.context
             val dialog = AlertDialog.Builder(context)
                 .setItems(arrayOf("수정", "삭제")) { _, which ->
                     when (which) {
-                        0 -> onEditClick(postData)  // 수정 클릭 시 onEditClick 호출
-                        1 -> onDeleteClick(postData)  // 삭제 클릭 시 onDeleteClick 호출
+                        0 -> onEditClick(content)  // 수정 클릭 시 onEditClick 호출
+                        1 -> onDeleteClick(content)  // 삭제 클릭 시 onDeleteClick 호출
                     }
                 }
                 .create()
@@ -66,13 +68,20 @@ class QuestionDetailRecyclerAdapter(
         }
     }
 
-    class PostDiffCallback : DiffUtil.ItemCallback<PostData>() {
-        override fun areItemsTheSame(oldItem: PostData, newItem: PostData): Boolean {
-            return oldItem.postId == newItem.postId
+    class DiffCallback : DiffUtil.ItemCallback<Content>() {
+        override fun areItemsTheSame(oldItem: Content, newItem: Content): Boolean {
+            Log.d("DiffCallback", "아이템 비교: ${oldItem.id} == ${newItem.id}")
+            return oldItem.id == newItem.id
         }
 
-        override fun areContentsTheSame(oldItem: PostData, newItem: PostData): Boolean {
-            return oldItem == newItem
+        @SuppressLint("DiffUtilEquals")
+        override fun areContentsTheSame(oldItem: Content, newItem: Content): Boolean {
+            val isSame = oldItem.title == newItem.title &&
+                    oldItem.favoriteCount == newItem.favoriteCount &&
+                    oldItem.favorites == newItem.favorites
+
+            Log.d("DiffCallback", "내용 비교 결과: $isSame")
+            return isSame
         }
     }
 }

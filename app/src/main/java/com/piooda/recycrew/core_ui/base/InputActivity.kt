@@ -18,10 +18,10 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.storage
-import com.piooda.data.model.PostData
+import com.piooda.data.model.Content
 import com.piooda.recycrew.databinding.ActivityInputBinding
-import com.piooda.recycrew.feature.community.question.QuestionDetailFragmentArgs
 import com.piooda.recycrew.feature.community.question.QuestionDetailsViewModel
+import com.piooda.recycrew.feature.community.question.QuestionViewModel
 import java.util.UUID
 
 class InputActivity : AppCompatActivity() {
@@ -29,19 +29,13 @@ class InputActivity : AppCompatActivity() {
     private lateinit var binding: ActivityInputBinding
     private var selectedImageUri: Uri? = null
     private val MIME_TYPE_IMAGE = "image/*"
-    private val TAG = "InputActivity" // 로그 태그 추가
+    private val TAG = "InputActivity"
 
-    private val viewModel by viewModels<QuestionDetailsViewModel> { ViewModelFactory(this) }
-
-
-    private val args: QuestionDetailFragmentArgs by navArgs()  // 자동으로 생성된 NavArgs 클래스
-
-    private val postData: PostData by lazy { args.detailedQuestPostData }
+    private val viewModel by viewModels<QuestionViewModel> { ViewModelFactory(this) }
 
     private val pickSinglePhotoLauncher =
         registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri: Uri? ->
             if (uri != null) {
-                Log.d(TAG, "Selected URI: $uri")
                 loadImageWithGlide(uri.toString())
                 selectedImageUri = uri
             } else {
@@ -57,7 +51,6 @@ class InputActivity : AppCompatActivity() {
         checkAndRequestPermissions()
 
         binding.selectImageButton.setOnClickListener {
-            Log.d(TAG, "Select image button clicked")
             if (isPhotoPickerAvailable()) {
                 pickSinglePhotoLauncher.launch(
                     PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
@@ -72,172 +65,110 @@ class InputActivity : AppCompatActivity() {
         }
 
         binding.confirmButton.setOnClickListener {
-            Log.d(TAG, "Confirm button clicked")
-            if (selectedImageUri != null) {
-                Log.d(TAG, "Starting image upload with URI: $selectedImageUri")
-                uploadImageAndCreatePost()
-            } else {
-                Toast.makeText(this, "이미지를 선택하세요.", Toast.LENGTH_SHORT).show()
-            }
+            uploadImageAndCreatePost()
         }
     }
 
     private fun loadImageWithGlide(url: String) {
-        Log.d(TAG, "Attempting to load image with URL: $url")
-        try {
-            Glide.with(this)
-                .load(url)
-                .into(binding.imagePreview)
-            Log.d(TAG, "Image loaded successfully with Glide")
-        } catch (e: Exception) {
-            Log.e(TAG, "Error loading image with Glide", e)
-            Toast.makeText(this, "이미지 로딩 실패: ${e.message}", Toast.LENGTH_SHORT).show()
-        }
+        Glide.with(this).load(url).into(binding.imagePreview)
     }
-
 
     private fun checkAndRequestPermissions() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (checkSelfPermission(android.Manifest.permission.READ_MEDIA_IMAGES)
-                != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(
-                    arrayOf(android.Manifest.permission.READ_MEDIA_IMAGES),
-                    PERMISSION_REQUEST_CODE
-                )
+            if (checkSelfPermission(android.Manifest.permission.READ_MEDIA_IMAGES) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(arrayOf(android.Manifest.permission.READ_MEDIA_IMAGES), PERMISSION_REQUEST_CODE)
             }
         } else {
-            if (checkSelfPermission(android.Manifest.permission.READ_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(
-                    arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE),
-                    PERMISSION_REQUEST_CODE
-                )
+            if (checkSelfPermission(android.Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE), PERMISSION_REQUEST_CODE)
             }
         }
     }
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == PERMISSION_REQUEST_CODE) {
-            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Log.d(TAG, "Permissions granted")
-                Toast.makeText(this, "권한이 승인되었습니다.", Toast.LENGTH_SHORT).show()
-            } else {
-                Log.e(TAG, "Permissions denied")
-                Toast.makeText(this, "이미지 선택을 위해 권한이 필요합니다.", Toast.LENGTH_SHORT).show()
-            }
-        }
-    }
-
-    @Deprecated("Deprecated in Java")
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == PHOTO_PICKER_REQUEST_CODE && resultCode == RESULT_OK) {
-            data?.data?.let { uri ->
-                Log.d(TAG, "Image selected from onActivityResult: $uri")
-                selectedImageUri = uri
-                loadImageWithGlide(uri.toString())
-            }
-        }
-    }
-
-    private fun isPhotoPickerAvailable(): Boolean {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
-    }
-
+    // ✅ 이미지 없이도 업로드 가능하게 수정
     private fun uploadImageAndCreatePost() {
-        // 입력값 검증
         val title = binding.titleEdit.text.toString()
-        val content = binding.contentEdit.text.toString()
+        val contentText = binding.contentEdit.text.toString()
+        val category = binding.categoryEdit.text.toString()
 
         if (title.isEmpty()) {
             Toast.makeText(this, "제목을 입력해주세요.", Toast.LENGTH_SHORT).show()
             return
         }
 
-        if (content.isEmpty()) {
+        if (contentText.isEmpty()) {
             Toast.makeText(this, "내용을 입력해주세요.", Toast.LENGTH_SHORT).show()
             return
         }
 
         val currentUser = FirebaseAuth.getInstance().currentUser
-
         val userId = currentUser?.uid ?: "UnknownUser"
         val userName = currentUser?.displayName ?: "Anonymous"
 
-        selectedImageUri?.let { uri ->
-            try {
-                // 로딩 표시 시작
-                binding.confirmButton.isEnabled = false
-
-                val storageRef = Firebase.storage.reference
-                val imageRef = storageRef.child("sample/${System.currentTimeMillis()}.png")
-
-                Log.d(TAG, "Starting upload to Firebase Storage")
-
-                val uploadTask = imageRef.putFile(uri)
-
-                uploadTask
-                    .addOnProgressListener { taskSnapshot ->
-                        val progress = (100.0 * taskSnapshot.bytesTransferred / taskSnapshot.totalByteCount)
-                        Log.d(TAG, "Upload progress: $progress%")
-                    }
-                    .addOnSuccessListener { taskSnapshot ->
-                        Log.d(TAG, "Upload successful: ${taskSnapshot.metadata?.path}")
-
-                        // 업로드 후 URL 가져오기
-                        getImageDownloadUrl(imageRef) { downloadUrl ->
-                            if (downloadUrl.isNotEmpty()) {
-                                val postData = PostData(
-                                    postId = UUID.randomUUID().toString(),
-                                    userId = userId, // 로그인한 유저의 UID 사용
-                                    title = title,
-                                    content = content,
-                                    imagePath = downloadUrl, // 여기에서 이미 String으로 받음
-                                    userName = userName, // 로그인한 유저의 이름 사용
-                                    category = binding.categoryEdit.text.toString(),
-                                    commentCount = 0,
-                                    likeCount = 0,
-                                    viewCount = 0,
-                                    time = System.currentTimeMillis().toString(),
-                                )
-
-                                // Use the ViewModel to create the post
-                                viewModel.createPost(postData)
-                                // 화면 이동을 위한 코드 추가
-                                Toast.makeText(this, "게시글이 성공적으로 등록되었습니다.", Toast.LENGTH_SHORT).show()
-                                finish() // 현재 Activity 종료하여 이전 화면으로 돌아가기
-                            } else {
-                                handleError("다운로드 URL 획득 실패", Exception("URL is empty"))
-                            }
-                        }
-                    }
-                    .addOnFailureListener { exception ->
-                        handleError("이미지 업로드 실패", exception)
-                    }
-            } catch (e: Exception) {
-                handleError("업로드 중 오류 발생", e)
-            }
+        // ✅ 이미지가 선택되지 않았을 경우, 텍스트만 업로드
+        if (selectedImageUri == null) {
+            val newContent = Content(
+                id = UUID.randomUUID().toString(),
+                title = title,
+                content = contentText,
+                imagePath = "",  // ✅ 이미지가 없으므로 빈 문자열 저장
+                category = category,
+                commentCount = 0,
+                favoriteCount = 0,
+                viewCount = 0
+            )
+            viewModel.insert(newContent)
+            showToast("이미지 없이 게시글이 등록되었습니다.")
+            finish()
+            return
         }
+
+        // ✅ 이미지가 선택되었을 경우 Firebase Storage 업로드
+        val storageRef = Firebase.storage.reference.child("images/${System.currentTimeMillis()}.png")
+
+        storageRef.putFile(selectedImageUri!!)
+            .addOnSuccessListener { taskSnapshot ->
+                storageRef.downloadUrl.addOnSuccessListener { downloadUrl ->
+                    val newContent = Content(
+                        id = UUID.randomUUID().toString(),
+                        title = title,
+                        content = contentText,
+                        imagePath = downloadUrl.toString(),  // ✅ 이미지 URL 저장
+                        category = category,
+                        commentCount = 0,
+                        favoriteCount = 0,
+                        viewCount = 0
+                    )
+                    viewModel.insert(newContent)
+                    showToast("게시글이 성공적으로 등록되었습니다.")
+                    finish()
+                }
+            }
+            .addOnFailureListener { exception ->
+                handleError("이미지 업로드 실패", exception)
+            }
     }
 
     private fun getImageDownloadUrl(imageRef: StorageReference, callback: (String) -> Unit) {
-        // 비동기적으로 다운로드 URL 가져오기
         imageRef.downloadUrl.addOnSuccessListener { uri ->
-            callback(uri.toString()) // Uri를 String으로 변환하여 callback에 전달
-        }.addOnFailureListener { exception ->
-            Log.e("TAG:Firebase", "Error getting download URL: ${exception.message}")
-            callback("") // 실패 시 빈 문자열 반환
+            callback(uri.toString())
+        }.addOnFailureListener {
+            callback("")
         }
     }
+
+    private fun showToast(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+    }
+
     private fun handleError(message: String, exception: Exception) {
         Log.e(TAG, "$message: ${exception.message}", exception)
         Toast.makeText(this, "$message: ${exception.message}", Toast.LENGTH_SHORT).show()
         binding.confirmButton.isEnabled = true
+    }
+
+    private fun isPhotoPickerAvailable(): Boolean {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
     }
 
     companion object {

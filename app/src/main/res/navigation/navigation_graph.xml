@@ -109,7 +109,7 @@
             app:destination="@id/questionDetailFragment">
             <argument
                 android:name="detailedQuestPostData"
-                app:argType="com.piooda.data.model.PostData" />
+                app:argType="com.piooda.data.model.Content" />
         </action>
     </fragment>
     <action
@@ -132,7 +132,7 @@
         tools:layout="@layout/fragment_question_detail">
         <argument
             android:name="detailedQuestPostData"
-            app:argType="com.piooda.data.model.PostData" />
+            app:argType="com.piooda.data.model.Content" />
     </fragment>
     <fragment
         android:id="@+id/FAQFragment"
