@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.piooda.data.model.Content
-import com.piooda.data.repositoryImpl.ContentDiffCallback
 import com.piooda.recycrew.R
 import com.piooda.recycrew.databinding.ItemCommunityPostBinding
 
@@ -56,8 +55,8 @@ class QuestionRecyclerAdapter(
 
         private fun updateLikeButtonUI(isLiked: Boolean) {
             binding.icLike.setImageResource(
-                if (isLiked) R.drawable.ic_baseline_favorite_24
-                else R.drawable.ic_baseline_unfavorite_24
+                if (isLiked) R.drawable.ic_baseline_unfavorite_24
+                else R.drawable.ic_baseline_favorite_24
             )
         }
     }

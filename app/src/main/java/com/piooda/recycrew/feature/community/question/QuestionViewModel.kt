@@ -27,6 +27,10 @@ class QuestionViewModel @Inject constructor(
     private val _state = MutableStateFlow<UiState<List<Content>>>(UiState.Loading)
     val state: StateFlow<UiState<List<Content>>> = _state.asStateFlow()
 
+    init {
+        refreshPosts()
+    }
+
     // ✅ Firestore 데이터 Flow를 StateFlow로 관리
     val contentList: StateFlow<List<Content>> = contentUseCase.loadList()
         .stateIn(

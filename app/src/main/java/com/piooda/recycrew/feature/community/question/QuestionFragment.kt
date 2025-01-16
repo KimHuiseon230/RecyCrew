@@ -22,6 +22,7 @@ import com.piooda.recycrew.core_ui.base.InputActivity
 import com.piooda.recycrew.core_ui.base.ViewModelFactory
 import com.piooda.recycrew.databinding.FragmentQuestionBinding
 import com.piooda.recycrew.feature.community.question.adapter.QuestionRecyclerAdapter
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 class QuestionFragment : BaseFragment<FragmentQuestionBinding>(FragmentQuestionBinding::inflate) {
@@ -32,7 +33,7 @@ class QuestionFragment : BaseFragment<FragmentQuestionBinding>(FragmentQuestionB
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?,
     ): View {
         _binding = FragmentQuestionBinding.inflate(inflater, container, false)
         return binding.root
@@ -42,12 +43,8 @@ class QuestionFragment : BaseFragment<FragmentQuestionBinding>(FragmentQuestionB
         super.onViewCreated(view, savedInstanceState)
 
         setupRecyclerView()
+        observeViewModel()
         setupFloatingButton()
-        observeViewModel() // ✅ 여기에서 반드시 호출
-
-        if (viewModel.state.value !is UiState.Success) {
-            viewModel.refreshPosts()
-        }
     }
 
     // ✅ RecyclerView 설정 (좋아요 클릭 이벤트 추가)
@@ -55,7 +52,7 @@ class QuestionFragment : BaseFragment<FragmentQuestionBinding>(FragmentQuestionB
         recyclerAdapter = QuestionRecyclerAdapter(
             onClick = { item -> navigateToDetailFragment(item) },
             onLikeClick = { item ->
-                viewModel.toggleLike(item) // ✅ 좋아요 클릭 이벤트 연결
+                viewModel.toggleLike(item)
             }
         )
         binding.recyclerView.apply {
@@ -69,7 +66,7 @@ class QuestionFragment : BaseFragment<FragmentQuestionBinding>(FragmentQuestionB
         binding.floatingButton.setOnClickListener {
             val intent = Intent(requireActivity(), InputActivity::class.java)
             startActivity(intent)
-            viewModel.refreshPosts()  // ✅ 새 데이터 로드
+            viewModel.refreshPosts()
         }
     }
 
@@ -78,8 +75,8 @@ class QuestionFragment : BaseFragment<FragmentQuestionBinding>(FragmentQuestionB
     private fun observeViewModel() {
         lifecycleScope.launch {
             viewModel.contentList
-                .flowWithLifecycle(lifecycle, Lifecycle.State.STARTED) // ✅ STARTED 상태에서 바로 수집
-                .collect { contentList ->
+                .flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
+                .collectLatest { contentList ->
                     recyclerAdapter.submitList(contentList.toMutableList()) {
                         binding.progressBar.isVisible = false
                         binding.recyclerView.isVisible = contentList.isNotEmpty()
@@ -87,16 +84,42 @@ class QuestionFragment : BaseFragment<FragmentQuestionBinding>(FragmentQuestionB
                     }
                 }
         }
+        lifecycleScope.launch {
+            viewModel.state.collectLatest {
+                when (it) {
+                    is UiState.Success -> {
+                        binding.progressBar.isVisible = false
+                        recyclerAdapter.submitList(it.resultData.toMutableList())
+                    }
+
+                    is UiState.Error -> {
+                        binding.progressBar.isVisible = false
+                        Toast.makeText(
+                            requireContext(),
+                            "데이터 로드 실패: ${it.exception}",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+
+                    UiState.Loading -> {
+                        binding.progressBar.isVisible = true
+                    }
+
+                    else -> {
+
+                    }
+                }
+            }
+        }
     }
 
-    // ✅ 상세 페이지 이동
+    override fun onResume() {
+        super.onResume()
+        viewModel.refreshPosts()
+    }
+
     private fun navigateToDetailFragment(item: Content) {
         val action = QuestionFragmentDirections.actionQuestionFragmentToQuestionDetailFragment(item)
         findNavController().navigate(action)
-    }
-
-    // ✅ Toast 메시지 처리
-    private fun showToast(message: String) {
-        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
     }
 }
