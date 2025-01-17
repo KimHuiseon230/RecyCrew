@@ -1,6 +1,6 @@
-package com.piooda.data.datastore
+package com.piooda.data.datasource.remote
 
-import androidx.datastore.preferences.core.Preferences.*
+import androidx.datastore.preferences.core.Preferences.Key
 import kotlinx.coroutines.flow.Flow
 
 interface ICRUDPreferencesDataStore{

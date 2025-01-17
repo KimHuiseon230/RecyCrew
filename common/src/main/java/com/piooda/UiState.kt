@@ -1,4 +1,4 @@
-package com.piooda.recycrew.common
+package com.piooda
 
 sealed class UiState<out T> {
     data object Empty : UiState<Nothing>()

@@ -41,13 +41,13 @@
         app:layout_constraintBottom_toBottomOf="parent"
         />
 
-    <com.piooda.recycrew.core_ui.view.GreenButton
+    <com.piooda.recycrew.core.view.GreenButton
         android:id="@+id/attendanceCheckBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:text="출석 체크" />
 
-    <com.piooda.recycrew.core_ui.view.GreenButton
+    <com.piooda.recycrew.core.view.GreenButton
         android:id="@+id/myPageBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

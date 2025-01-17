@@ -1,7 +1,7 @@
 package com.piooda.data.repository.mypage.detail.editprofile
 
 import android.net.Uri
-import com.piooda.recycrew.common.UiState
+import com.piooda.UiState
 import kotlinx.coroutines.flow.Flow
 
 interface EditProfileRepository {

@@ -1,7 +1,7 @@
 package com.piooda.data.repository.attendencecheck
 
 import com.piooda.data.model.Attendance
-import com.piooda.recycrew.common.UiState
+import com.piooda.UiState
 import kotlinx.coroutines.flow.Flow
 
 interface AttendanceCheckRepository {

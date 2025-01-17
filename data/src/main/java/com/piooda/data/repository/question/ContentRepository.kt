@@ -1,4 +1,4 @@
-package com.piooda.data.repository
+package com.piooda.data.repository.question
 
 import com.piooda.data.model.Content
 import kotlinx.coroutines.flow.Flow

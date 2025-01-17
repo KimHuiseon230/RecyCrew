@@ -6,7 +6,7 @@
     android:background="@color/white">
 
 
-    <com.piooda.recycrew.core_ui.view.CircularImageView
+    <com.piooda.recycrew.core.view.CircularImageView
         android:id="@+id/circular_imageview_profile"
         android:layout_width="150dp"
         android:layout_height="150dp"
@@ -17,7 +17,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="packed" />
 
-    <com.piooda.recycrew.core_ui.view.CircularImageView
+    <com.piooda.recycrew.core.view.CircularImageView
         android:id="@+id/circular_imageview_edit_profile"
         android:layout_width="48dp"
         android:layout_height="48dp"
@@ -27,7 +27,7 @@
         app:layout_constraintEnd_toEndOf="@+id/circular_imageview_profile"
         app:layout_constraintTop_toTopOf="@+id/circular_imageview_profile" />
 
-    <com.piooda.recycrew.core_ui.view.TagEditText
+    <com.piooda.recycrew.core.view.TagEditText
         android:id="@+id/tag_edittext_nickname"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -52,7 +52,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
-    <com.piooda.recycrew.core_ui.view.GreenButton
+    <com.piooda.recycrew.core.view.GreenButton
         android:id="@+id/green_button_save"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

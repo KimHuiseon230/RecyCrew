@@ -1,4 +1,4 @@
-package com.piooda.data.datasourceImpl
+package com.piooda.data.datasource.impl
 
 import com.piooda.data.datasource.ImageDataSource
 

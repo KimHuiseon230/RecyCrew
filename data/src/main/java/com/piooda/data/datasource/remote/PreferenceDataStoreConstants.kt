@@ -1,4 +1,4 @@
-package com.piooda.data.datastore
+package com.piooda.data.datasource.remote
 
 import androidx.datastore.preferences.core.booleanPreferencesKey
 

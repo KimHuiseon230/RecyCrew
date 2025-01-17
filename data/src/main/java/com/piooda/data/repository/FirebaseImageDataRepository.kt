@@ -1,11 +1,10 @@
-package com.piooda.data.repositoryImpl
+package com.piooda.data.repository
 
 import android.util.Log
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.piooda.data.model.DetailedImageData
-import com.piooda.data.repository.ImageDataRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext

@@ -7,7 +7,7 @@ import com.google.firebase.firestore.Query
 import com.google.firebase.storage.FirebaseStorage
 import com.piooda.data.model.Content
 import com.piooda.data.model.ContentDto
-import com.piooda.data.repository.ContentRepository
+import com.piooda.data.repository.question.ContentRepository
 import com.piooda.data.repositoryImpl.ContentMapper.Companion.toContent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow

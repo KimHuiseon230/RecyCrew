@@ -4,7 +4,7 @@ import com.piooda.data.repository.mypage.detail.notice.NoticeRepository
 import com.piooda.data.model.NoticeItem
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
-import com.piooda.recycrew.common.UiState
+import com.piooda.UiState
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow

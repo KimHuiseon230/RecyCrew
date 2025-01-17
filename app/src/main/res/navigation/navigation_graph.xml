@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/myPageFragment"
-        android:name="com.piooda.recycrew.feature.mypage.MyPageFragment"
+        android:name="com.piooda.recycrew.feature.mypage.ui.MyPageFragment"
         android:label="fragment_my_page"
         tools:layout="@layout/fragment_mypage">
         <action
@@ -25,12 +25,12 @@
     </fragment>
     <fragment
         android:id="@+id/tradeFragment"
-        android:name="com.piooda.recycrew.feature.community.trade.TradeFragment"
+        android:name="com.piooda.recycrew.ui.fragment.TradeFragment"
         android:label="fragment_trade"
         tools:layout="@layout/fragment_trade" />
     <fragment
         android:id="@+id/attendanceCheckFragment"
-        android:name="com.piooda.recycrew.feature.event.attendanceCheck.AttendanceCheckFragment"
+        android:name="com.piooda.recycrew.feature.event.ui.AttendanceCheckFragment"
         android:label="fragment_attendance_check"
         tools:layout="@layout/fragment_calendar">
         <action
@@ -39,12 +39,12 @@
     </fragment>
     <fragment
         android:id="@+id/chatFragment"
-        android:name="com.piooda.recycrew.feature.chat.ChatFragment"
+        android:name="com.piooda.recycrew.ui.fragment.ChatFragment"
         android:label="fragment_chat"
         tools:layout="@layout/fragment_chat" />
     <fragment
         android:id="@+id/communityFragment"
-        android:name="com.piooda.recycrew.feature.community.CommunityFragment"
+        android:name="com.piooda.recycrew.feature.community.ui.CommunityFragment"
         android:label="fragment_community"
         tools:layout="@layout/fragment_community">
         <action
@@ -65,7 +65,7 @@
     </fragment>
     <fragment
         android:id="@+id/eventFragment"
-        android:name="com.piooda.recycrew.feature.event.EventFragment"
+        android:name="com.piooda.recycrew.feature.event.ui.EventFragment"
         android:label="fragment_event"
         tools:layout="@layout/fragment_event">
         <action
@@ -74,7 +74,7 @@
     </fragment>
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.piooda.recycrew.feature.home.HomeFragment"
+        android:name="com.piooda.recycrew.feature.home.ui.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home">
         <action
@@ -96,12 +96,12 @@
     </fragment>
     <fragment
         android:id="@+id/meetUpFragment"
-        android:name="com.piooda.recycrew.feature.community.meetup.MeetUpFragment"
+        android:name="com.piooda.recycrew.ui.fragment.MeetUpFragment"
         android:label="fragment_meet_up"
         tools:layout="@layout/fragment_meet_up" />
     <fragment
         android:id="@+id/questionFragment"
-        android:name="com.piooda.recycrew.feature.community.question.QuestionFragment"
+        android:name="com.piooda.recycrew.feature.community.ui.QuestionFragment"
         android:label="fragment_question"
         tools:layout="@layout/fragment_question">
         <action
@@ -118,7 +118,7 @@
         tools:layout="@layout/activity_input" />
     <fragment
         android:id="@+id/categoriesDetailedImagesFragment"
-        android:name="com.piooda.recycrew.feature.home.CategoriesDetailedImagesFragment"
+        android:name="com.piooda.recycrew.feature.home.ui.CategoriesDetailedImagesFragment"
         tools:layout="@layout/fragment_categories_detailed_images">
 
         <argument
@@ -127,7 +127,7 @@
     </fragment>
     <fragment
         android:id="@+id/questionDetailFragment"
-        android:name="com.piooda.recycrew.feature.community.question.QuestionDetailFragment"
+        android:name="com.piooda.recycrew.feature.community.ui.QuestionDetailFragment"
         android:label="fragment_question_detail"
         tools:layout="@layout/fragment_question_detail">
         <argument

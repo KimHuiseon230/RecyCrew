@@ -2,9 +2,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.google.services)
-    alias(libs.plugins.org.jetbrains.kotlin.kapt)
+    alias(libs.plugins.kotlinAndroidKsp)
     alias(libs.plugins.androidx.navigation.safe.args)
-    alias(libs.plugins.devtools)
 }
 
 android {
@@ -90,5 +89,5 @@ dependencies {
 
     implementation(project(":data"))
     implementation(project(":common"))
-    tasks.register("prepareKotlinBuildScriptModel"){}
+    tasks.register("prepareKotlinBuildScriptModel") {}
 }
