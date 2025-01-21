@@ -12,5 +12,4 @@ interface ContentRepository {
     suspend fun addCommentToPost(postId: String, comment: Content.Comment)
     suspend fun toggleLike(contentId: String, uid: String)
     suspend fun observeContentList(): Flow<List<Content>>
-
     }
