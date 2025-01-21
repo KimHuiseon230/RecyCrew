@@ -2,68 +2,44 @@ package com.piooda.data.repositoryImpl
 
 import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.Query
 import com.google.firebase.storage.FirebaseStorage
 import com.piooda.data.model.Content
-import com.piooda.data.model.ContentDto
 import com.piooda.data.repository.question.ContentRepository
-import com.piooda.data.repositoryImpl.ContentMapper.Companion.toContent
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
 
 class ContentRepositoryImpl(
     private val db: FirebaseFirestore,
-    private val firebaseStorage: FirebaseStorage
+    private val firebaseStorage: FirebaseStorage,
 ) : ContentRepository { // ✅ 인터페이스 구현 추가
     private val postsCollection = db.collection("content")
 
-    // ✅ Firestore에서 게시글 리스트 불러오기 (Flow 사용)
-    override fun loadList(): Flow<List<Content>> = flow {
-        try {
-            // ✅ Firestore에서 데이터 가져오기
-            val snapshot = postsCollection.get().await()
-
-            // ✅ Firestore 데이터를 ContentDto → Content 변환 (변환 함수 적용)
-            val contentList = snapshot.documents.mapNotNull { doc ->
-                doc.toObject(ContentDto::class.java)?.toContent()
+    // 🔹 게시글 목록 가져오기 (Flow 사용)
+    override fun loadList(): Flow<List<Content>> = callbackFlow {
+        val listener = postsCollection.addSnapshotListener { snapshot, error ->
+            if (error != null) {
+                close(error)
+                return@addSnapshotListener
             }
-
-            // ✅ 변환된 데이터를 Flow로 방출
-            emit(contentList)
-
-        } catch (e: FirebaseFirestoreException) {
-            Log.e("Firestore Error", "데이터 로드 실패: ${e.message}")
-            emit(emptyList())  // Firestore 오류 발생 시 빈 리스트 반환
-        } catch (e: Exception) {
-            Log.e("General Error", "예기치 않은 오류: ${e.message}")
-            emit(emptyList())
+            val contents = snapshot?.documents?.mapNotNull { doc ->
+                doc.toObject(Content::class.java)?.copy(id = doc.id)
+            } ?: emptyList()
+            trySend(contents)
         }
-    }.flowOn(Dispatchers.IO)  // ✅ I/O 스레드에서 실행
+        awaitClose { listener.remove() }
+    }
 
 
     // ✅ 게시글 추가 (ID 자동 생성 및 안정성 개선)
-    override suspend fun insert(content: Content): Boolean {
-        return try {
-            val postRef = content.id?.let {
-                postsCollection.document(it) // 사용자가 ID를 제공한 경우
-            } ?: postsCollection.document() // ✅ Firestore에서 ID 자동 생성
-
-            val postWithDefaults = content.copy(
-                favoriteCount = 0, // ✅ 기본값 설정
-            )
-
-            // ✅ Firestore에 데이터 저장
-            postRef.set(postWithDefaults).await()
-            Log.d("ContentRepositoryImpl", "Post successfully added!")
-            true
-        } catch (e: Exception) {
-            Log.e("Firestore Error", "Error adding post: ${e.localizedMessage}")
-            false
-        }
+    override suspend fun insert(content: Content): Boolean = try {
+        val postRef = postsCollection.document()
+        postRef.set(content.copy(id = postRef.id)).await()
+        true
+    } catch (e: Exception) {
+        false
     }
 
 
@@ -88,31 +64,27 @@ class ContentRepositoryImpl(
     }
 
     // 🔥 4. 게시글 삭제 (ID 필요)
-    override suspend fun delete(content: Content): Boolean {
-        return try {
-            content.id?.let {
-                postsCollection.document(it).delete().await()
-                true
-            } ?: false
-        } catch (e: Exception) {
-            e.printStackTrace()
-            false
-        }
+    override suspend fun delete(postId: String?): Boolean = try {
+        postId?.let {
+            postsCollection.document(it).delete().await()
+            true
+        } ?: false
+    } catch (e: Exception) {
+        false
     }
 
     // ✅ 댓글 불러오기 (Firestore)
-    override suspend fun getCommentsForPost(postId: String): List<Content.Comment> {
-        return try {
-            val snapshot = postsCollection.document(postId)
-                .collection("comments")
-                .orderBy("timestamp", Query.Direction.DESCENDING)
-                .get()
-                .await()
-
-            snapshot.documents.mapNotNull { it.toObject(Content.Comment::class.java) }
-        } catch (e: Exception) {
-            emptyList()
-        }
+    override suspend fun getCommentsForPost(postId: String): Flow<List<Content.Comment>> = callbackFlow {
+        val listener = postsCollection.document(postId)
+            .collection("comments")
+            .orderBy("timestamp", Query.Direction.DESCENDING)
+            .addSnapshotListener { snapshot, _ ->
+                val comments = snapshot?.documents?.mapNotNull { doc ->
+                    doc.toObject(Content.Comment::class.java)
+                } ?: emptyList()
+                trySend(comments)
+            }
+        awaitClose { listener.remove() }
     }
 
     // ✅ 댓글 추가 (Firestore)
@@ -127,4 +99,43 @@ class ContentRepositoryImpl(
         }
     }
 
+    override suspend fun toggleLike(contentId: String, uid: String) {
+        postsCollection.document(contentId).run {
+            firestore.runTransaction { transaction ->
+                val snapshot = transaction.get(this)
+                val content = snapshot.toObject(Content::class.java)
+                    ?: throw Exception("Content not found")
+
+                val newFavorites = content.favorites.toMutableMap()
+                if (newFavorites.containsKey(uid)) {
+                    newFavorites.remove(uid)
+                    content.favoriteCount -= 1
+                } else {
+                    newFavorites[uid] = true
+                    content.favoriteCount += 1
+                }
+
+                content.favorites = newFavorites
+                transaction.set(this, content)
+            }.await()
+        }
+    }
+
+    override suspend fun observeContentList(): Flow<List<Content>> = callbackFlow {
+        val listener = postsCollection
+            .addSnapshotListener { snapshot, error ->
+                if (error != null) {
+                    close(error)
+                    return@addSnapshotListener
+                }
+
+                val contents = snapshot?.documents?.mapNotNull { doc ->
+                    doc.toObject(Content::class.java)?.copy(id = doc.id)
+                } ?: emptyList()
+
+                trySend(contents)
+            }
+
+        awaitClose { listener.remove() }
+    }
 }

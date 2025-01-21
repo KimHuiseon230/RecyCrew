@@ -59,6 +59,7 @@ class QuestionRecyclerAdapter(
                 else R.drawable.ic_baseline_favorite_24
             )
         }
+
     }
     class DiffCallback : DiffUtil.ItemCallback<Content>() {
         override fun areItemsTheSame(oldItem: Content, newItem: Content): Boolean {
