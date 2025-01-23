@@ -6,6 +6,7 @@ import com.google.firebase.firestore.Query
 import com.google.firebase.storage.FirebaseStorage
 import com.piooda.data.model.Content
 import com.piooda.data.repository.question.ContentRepository
+import com.piooda.data.repositoryImpl.ContentMapper.Companion.toMap
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
@@ -33,14 +34,27 @@ class ContentRepositoryImpl(
     }
 
 
-    // ✅ 게시글 추가 (ID 자동 생성 및 안정성 개선)
+    // ✅ 게시글 추가 (ID 자동 생성 및 searchIndex 저장)
     override suspend fun insert(content: Content): Boolean = try {
+        val searchIndex = listOf(content.title, content.content)  // 🔥 검색어 인덱스 생성
+            .flatMap { it.split(" ") }  // 띄어쓰기 기준으로 단어 분리
+            .map { it.lowercase() }  // 🔥 소문자로 변환
+
         val postRef = postsCollection.document()
-        postRef.set(content.copy(id = postRef.id)).await()
+        postRef.set(content.copy(id = postRef.id).apply {
+            // 🔥 searchIndex 필드 추가
+            val data = this.toMap().toMutableMap()
+            data["searchIndex"] = searchIndex
+            postRef.set(data).await()
+        })
+
+        Log.d("Firestore", "✅ 게시글 저장 완료! ID: ${postRef.id}, SearchIndex: $searchIndex")
         true
     } catch (e: Exception) {
+        Log.e("Firestore", "❌ 게시글 저장 오류: ${e.message}")
         false
     }
+
 
 
     // 🔥 3. 게시글 업데이트 (ID 필요)
@@ -121,7 +135,7 @@ class ContentRepositoryImpl(
         }
     }
 
-    override suspend fun observeContentList(): Flow<List<Content>> = callbackFlow {
+    override fun observeContentList(): Flow<List<Content>> = callbackFlow {
         val listener = postsCollection
             .addSnapshotListener { snapshot, error ->
                 if (error != null) {
@@ -138,4 +152,21 @@ class ContentRepositoryImpl(
 
         awaitClose { listener.remove() }
     }
+    override fun getContentById(contentId: String): Flow<Content> = callbackFlow {
+        val docRef = db.collection("content").document(contentId)
+
+        val listener = docRef.addSnapshotListener { snapshot, error ->
+            if (error != null) {
+                close(error)
+                return@addSnapshotListener
+            }
+
+            snapshot?.toObject(Content::class.java)?.let { content ->
+                trySend(content).isSuccess
+            }
+        }
+
+        awaitClose { listener.remove() }
+    }
+
 }

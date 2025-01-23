@@ -17,7 +17,8 @@ data class ContentDto(
     val imagePath: String = "",
     var commentCount: Int = 0,
     var viewCount: Int = 0,
-    var favorites: MutableMap<String, Boolean> = HashMap()
+    var favorites: MutableMap<String, Boolean> = HashMap(),
+    var searchIndex: List<String> = emptyList()  // 🔥 Firestore 검색을 위한 필드 추가
 ) {
     @Parcelize
     data class Comment(
@@ -38,7 +39,8 @@ data class Content(
     val imagePath: String = "",
     var commentCount: Int = 0,
     var viewCount: Int = 0,
-    var favorites: MutableMap<String, Boolean> = HashMap()
+    var favorites: MutableMap<String, Boolean> = HashMap(),
+    var searchIndex: List<String> = emptyList()  // 🔥 Firestore 검색을 위한 필드 추가
 ) : java.io.Serializable {
 
     @Parcelize

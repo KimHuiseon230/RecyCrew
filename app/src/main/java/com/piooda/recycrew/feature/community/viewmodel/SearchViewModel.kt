@@ -1,62 +1,85 @@
 package com.piooda.recycrew.feature.community.viewmodel
 
+import android.content.Context
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.piooda.data.model.Content
-import com.piooda.data.repository.ImageDataRepository
-import com.piooda.data.repository.question.ContentRepository
+import com.piooda.data.repository.SearchRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 
-class SearchViewModel @Inject constructor(
-    private val imageDataRepository: ImageDataRepository,
-    private val contentRepository: ContentRepository
-) : ViewModel() {
+class SearchViewModel(private val repository: SearchRepository, private val context: Context) :
+    ViewModel() {
 
-    private val _allContentList = MutableStateFlow<List<Content>>(emptyList())
-    val allContentList: StateFlow<List<Content>> = _allContentList.asStateFlow()
+    private val _searchResults = MutableStateFlow<List<Content>>(emptyList())
+    val searchResults: StateFlow<List<Content>> = _searchResults.asStateFlow()
 
-    private val _filteredList = MutableStateFlow<List<Content>>(emptyList())
-    val filteredList: StateFlow<List<Content>> = _filteredList.asStateFlow()
+    private val _searchHistory = MutableStateFlow<List<String>>(emptyList())
+    val searchHistory: StateFlow<List<String>> = _searchHistory.asStateFlow()
+
+    private val _isSearchViewExpanded = MutableStateFlow(false)
+    val isSearchViewExpanded: StateFlow<Boolean> = _isSearchViewExpanded.asStateFlow()
 
     init {
-        fetchAllContent()
+        Log.d("SearchViewModel", "✅ SearchViewModel 초기화됨")
+        loadSearchHistory()
     }
+    fun clearSearchResults() {
+        _searchResults.value = emptyList()
+    }
+    // ✅ 검색 실행 (엔터 키 눌렀을 때만 실행)
+    fun searchContent(query: String) {
+        if (query.isBlank()) {
+            Log.d("SearchViewModel", "⚠ 검색어가 비어 있어 실행되지 않음")
+            return
+        }
 
-    private fun fetchAllContent() {
+        Log.d("SearchViewModel", "🔥 검색 실행: $query")
+
         viewModelScope.launch {
-            val homeData = imageDataRepository.fetchBasicImagesData()
-            val communityData = contentRepository.loadList()
-
-            homeData.onSuccess { homeList ->
-                communityData.collect { communityList ->
-                    // 홈 데이터와 커뮤니티 데이터를 합쳐서 하나의 리스트로 관리
-                    _allContentList.value = homeList.map {
-                        Content(
-                            id = it.num.toString(),
-                            title = it.title,
-                            content = "",  // 홈 데이터는 내용 없음
-                            category = it.categoryLabel,
-                            imagePath = it.imageUrl
-                        )
-                    } + communityList
+            repository.searchContentRealtime(query)
+                .onStart {
+                    Log.d("SearchViewModel", "⏳ 검색 요청 시작: $query")
                 }
-            }
+                .catch { e ->
+                    Log.e("SearchViewModel", "❌ 검색 중 오류 발생: ${e.message}")
+                }
+                .collectLatest { results ->
+                    Log.d("SearchViewModel", "✅ 검색 결과 수신: ${results.size}개")
+                    _searchResults.value = results // ✅ 검색 결과 RecyclerView 업데이트
+                }
         }
     }
 
-    fun search(query: String) {
-        _filteredList.value = if (query.isEmpty()) {
-            _allContentList.value
-        } else {
-            _allContentList.value.filter {
-                it.title.contains(query, ignoreCase = true) ||
-                        it.content.contains(query, ignoreCase = true)
-            }
-        }
+    // ✅ 검색 기록 저장
+    fun addSearchHistory(query: String) {
+        Log.d("SearchViewModel", "📜 검색 기록 추가: $query")
+
+        repository.saveSearchHistory(query, context) // ✅ 검색 기록 저장
+        loadSearchHistory() // ✅ 검색 기록 불러오기
+
+        Log.d("SearchViewModel", "📜 검색 기록 추가 후 상태: ${_searchHistory.value}")
+    }
+
+    fun loadSearchHistory() {
+        Log.d("SearchViewModel", "📜 검색 기록 로드")
+        _searchHistory.value = repository.getSearchHistory(context)
+    }
+
+    fun deleteSearchQuery(query: String) {
+        Log.d("SearchViewModel", "🗑 검색 기록 삭제 요청: $query")
+        repository.deleteSearchHistory(query, context)  // 🔹 검색 기록 삭제
+        loadSearchHistory()  // 🔹 최신 검색 기록 로드
+    }
+
+    fun setSearchViewExpanded(expanded: Boolean) {
+        _isSearchViewExpanded.value = expanded
     }
 }

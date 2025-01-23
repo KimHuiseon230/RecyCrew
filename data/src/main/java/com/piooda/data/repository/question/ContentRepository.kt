@@ -11,5 +11,7 @@ interface ContentRepository {
     suspend fun getCommentsForPost(postId: String): Flow<List<Content.Comment>>
     suspend fun addCommentToPost(postId: String, comment: Content.Comment)
     suspend fun toggleLike(contentId: String, uid: String)
-    suspend fun observeContentList(): Flow<List<Content>>
+    fun getContentById(contentId: String): Flow<Content>
+
+    fun observeContentList(): Flow<List<Content>>
     }

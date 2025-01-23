@@ -1,9 +1,9 @@
 package com.piooda.recycrew.feature.community.ui
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.tabs.TabLayout
 import com.piooda.recycrew.R
 import com.piooda.recycrew.core.BaseFragment
@@ -16,7 +16,7 @@ class CommunityFragment :
         super.onViewCreated(view, savedInstanceState)
 
         // 툴바 설정
-            setupToolbarMenu()
+        setupToolbarMenu()
         setupTabs()
 
         // 기본으로 첫 번째 탭의 Fragment 로드
@@ -32,9 +32,10 @@ class CommunityFragment :
             setOnMenuItemClickListener { item ->
                 when (item.itemId) {
                     R.id.action_search -> {
-                        startActivity(Intent(requireContext(), SearchActivity::class.java))
+                        findNavController().navigate(R.id.action_communityFragment_to_searchFragment)  // ✅ Navigation을 사용해 이동
                         true
                     }
+
                     else -> false
                 }
             }
@@ -52,6 +53,7 @@ class CommunityFragment :
                         "게시글" -> loadFragment(QuestionFragment())
                     }
                 }
+
                 override fun onTabUnselected(tab: TabLayout.Tab?) {}
                 override fun onTabReselected(tab: TabLayout.Tab?) {}
             })
@@ -63,4 +65,5 @@ class CommunityFragment :
             .replace(R.id.tabContent, fragment)
             .commit()
     }
+
 }

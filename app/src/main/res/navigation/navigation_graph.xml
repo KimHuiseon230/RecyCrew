@@ -23,11 +23,7 @@
             android:id="@+id/action_myPageFragment_to_editProfileFragment"
             app:destination="@id/editProfileFragment" />
     </fragment>
-    <fragment
-        android:id="@+id/tradeFragment"
-        android:name="com.piooda.recycrew.ui.fragment.TradeFragment"
-        android:label="fragment_trade"
-        tools:layout="@layout/fragment_trade" />
+
     <fragment
         android:id="@+id/attendanceCheckFragment"
         android:name="com.piooda.recycrew.feature.event.ui.AttendanceCheckFragment"
@@ -37,11 +33,7 @@
             android:id="@+id/action_attendanceCheckFragment_to_myPageFragment"
             app:destination="@id/myPageFragment" />
     </fragment>
-    <fragment
-        android:id="@+id/chatFragment"
-        android:name="com.piooda.recycrew.ui.fragment.ChatFragment"
-        android:label="fragment_chat"
-        tools:layout="@layout/fragment_chat" />
+
     <fragment
         android:id="@+id/communityFragment"
         android:name="com.piooda.recycrew.feature.community.ui.CommunityFragment"
@@ -51,17 +43,12 @@
             android:id="@+id/action_questionFragment_to_questionDetailFragment"
             app:destination="@id/questionDetailFragment" />
         <action
-            android:id="@+id/action_communityFragment_to_tradeFragment"
-            app:destination="@id/tradeFragment" />
-        <action
             android:id="@+id/action_communityFragment_to_questionFragment"
             app:destination="@id/questionFragment" />
+
         <action
-            android:id="@+id/action_communityFragment_to_meetUpFragment"
-            app:destination="@id/meetUpFragment" />
-        <action
-            android:id="@+id/action_communityFragment_to_chatFragment"
-            app:destination="@id/chatFragment" />
+            android:id="@+id/action_communityFragment_to_searchFragment"
+            app:destination="@id/searchFragment" />
     </fragment>
     <fragment
         android:id="@+id/eventFragment"
@@ -94,11 +81,7 @@
                 app:argType="com.piooda.data.model.DetailedImageData" />
         </action>
     </fragment>
-    <fragment
-        android:id="@+id/meetUpFragment"
-        android:name="com.piooda.recycrew.ui.fragment.MeetUpFragment"
-        android:label="fragment_meet_up"
-        tools:layout="@layout/fragment_meet_up" />
+
     <fragment
         android:id="@+id/questionFragment"
         android:name="com.piooda.recycrew.feature.community.ui.QuestionFragment"
@@ -111,6 +94,9 @@
                 android:name="detailedQuestPostData"
                 app:argType="com.piooda.data.model.Content" />
         </action>
+        <action
+            android:id="@+id/action_questionFragment_to_searchFragment"
+            app:destination="@id/searchFragment" />
     </fragment>
     <action
         android:id="@+id/action_questionFragment_to_inputScreen"
@@ -180,6 +166,11 @@
         android:label="AuthActivity"
         tools:layout="@layout/activity_auth" />
 
+    <fragment
+        android:id="@+id/searchFragment"
+        android:name="com.piooda.recycrew.feature.community.ui.SearchFragment"
+        android:label="검색"
+        tools:layout="@layout/fragment_search" />
 
 </navigation>
 

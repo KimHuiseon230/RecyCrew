@@ -56,6 +56,9 @@ class QuestionDetailFragment :
 
         // ✅ 댓글 불러오기 (Firestore 호출)
         content.id?.let { viewModel.loadComments(it) }
+        content.id?.let{ arguments?.getString("CONTENT_ID")}  // ✅ 전달받은 게시물 ID 가져오기
+
+        content.id?.let{viewModel.loadContentDetail(it) }  // ✅ ViewModel에서 데이터 불러오기
 
         // ✅ 댓글 작성 기능
         binding.commentFiled.setEndIconOnClickListener {

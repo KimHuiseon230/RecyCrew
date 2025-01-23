@@ -174,4 +174,6 @@
     <string name="points_format">P</string>
     <string name="nickname">닉네임</string>
     <string name="notice_point">P가 모였어요</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
 </resources>
