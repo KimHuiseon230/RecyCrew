@@ -15,11 +15,8 @@ class CommunityFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // 툴바 설정
         setupToolbarMenu()
         setupTabs()
-
-        // 기본으로 첫 번째 탭의 Fragment 로드
         loadFragment(QuestionFragment())
     }
 
@@ -32,7 +29,7 @@ class CommunityFragment :
             setOnMenuItemClickListener { item ->
                 when (item.itemId) {
                     R.id.action_search -> {
-                        findNavController().navigate(R.id.action_communityFragment_to_searchFragment)  // ✅ Navigation을 사용해 이동
+                        findNavController().navigate(R.id.action_communityFragment_to_searchFragment)
                         true
                     }
 
@@ -45,8 +42,6 @@ class CommunityFragment :
     private fun setupTabs() {
         binding.tabs?.apply {
             addTab(newTab().setText("게시글"))
-
-            // 탭 선택 시 프래그먼트 변경
             addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
                 override fun onTabSelected(tab: TabLayout.Tab?) {
                     when (tab?.text) {

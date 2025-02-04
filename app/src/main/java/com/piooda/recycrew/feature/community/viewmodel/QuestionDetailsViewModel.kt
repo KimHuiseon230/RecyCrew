@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-class QuestionDetailsViewModel (
+class QuestionDetailsViewModel(
     private var repository: ContentRepository,
 ) : ViewModel() {
 
@@ -23,7 +23,7 @@ class QuestionDetailsViewModel (
     private val _uiState = MutableStateFlow<UiState<Unit>>(UiState.Loading)
     val uiState: StateFlow<UiState<Unit>> = _uiState.asStateFlow()
 
-    private val _contentDetail = MutableStateFlow<Content?>(null)  // ✅ 게시물 정보 저장
+    private val _contentDetail = MutableStateFlow<Content?>(null)
     val contentDetail: StateFlow<Content?> = _contentDetail.asStateFlow()
 
     // 🔹 댓글 가져오기
@@ -35,6 +35,15 @@ class QuestionDetailsViewModel (
         }
     }
 
+    // 🔹 게시글 가져오기
+    fun loadContentDetail(contentId: String) {
+        viewModelScope.launch {
+            repository.getContentById(contentId)
+                .catch { e -> Log.e("QuestionDetailsViewModel", "❌ 게시물 불러오기 실패: ${e.message}") }
+                .collectLatest { content -> _contentDetail.value = content }
+        }
+    }
+
     // 🔹 댓글 추가
     fun addCommentToPost(postId: String, comment: Content.Comment) {
         viewModelScope.launch {
@@ -43,18 +52,21 @@ class QuestionDetailsViewModel (
         }
     }
 
+    //🔹 게시글 업데이트
+    fun updatePost(postId: Content) {
+        viewModelScope.launch {
+            repository.update(postId)
+            _uiState.value = UiState.Success(Unit)
+        }
+    }
+
     // 🔹 게시글 삭제
     fun deletePost(postId: String) {
         viewModelScope.launch {
             repository.delete(postId)
-            _uiState.value = UiState.Success(Unit) // 삭제 후 UI 업데이트
+            _uiState.value = UiState.Success(Unit)
         }
     }
-    fun loadContentDetail(contentId: String) {
-        viewModelScope.launch {
-            repository.getContentById(contentId)
-                .catch { e -> Log.e("DetailViewModel", "❌ 게시물 불러오기 실패: ${e.message}") }
-                .collectLatest { content -> _contentDetail.value = content }
-        }
-    }
+
+
 }

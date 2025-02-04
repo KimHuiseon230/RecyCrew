@@ -11,75 +11,70 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 
+class SearchViewModel(
+    private val repository: SearchRepository,
+    private val context: Context
+) : ViewModel() {
 
-class SearchViewModel(private val repository: SearchRepository, private val context: Context) :
-    ViewModel() {
-
-    private val _searchResults = MutableStateFlow<List<Content>>(emptyList())
+    private val _searchResults =
+        MutableStateFlow<List<Content>>(emptyList()) // 🔥 List<Content>로 변경
     val searchResults: StateFlow<List<Content>> = _searchResults.asStateFlow()
 
-    private val _searchHistory = MutableStateFlow<List<String>>(emptyList())
+    private val _searchHistory = MutableStateFlow<List<String>>(emptyList()) //  검색 기록
     val searchHistory: StateFlow<List<String>> = _searchHistory.asStateFlow()
 
-    private val _isSearchViewExpanded = MutableStateFlow(false)
-    val isSearchViewExpanded: StateFlow<Boolean> = _isSearchViewExpanded.asStateFlow()
+    private val _userSuggestions = MutableStateFlow<List<String>>(emptyList()) //  유저 검색어 자동완성
+    val userSuggestions: StateFlow<List<String>> = _userSuggestions.asStateFlow()
 
     init {
-        Log.d("SearchViewModel", "✅ SearchViewModel 초기화됨")
+        Log.d("SearchViewModel", " SearchViewModel 초기화됨")
         loadSearchHistory()
     }
-    fun clearSearchResults() {
-        _searchResults.value = emptyList()
-    }
-    // ✅ 검색 실행 (엔터 키 눌렀을 때만 실행)
-    fun searchContent(query: String) {
-        if (query.isBlank()) {
-            Log.d("SearchViewModel", "⚠ 검색어가 비어 있어 실행되지 않음")
-            return
-        }
 
-        Log.d("SearchViewModel", "🔥 검색 실행: $query")
 
-        viewModelScope.launch {
-            repository.searchContentRealtime(query)
-                .onStart {
-                    Log.d("SearchViewModel", "⏳ 검색 요청 시작: $query")
-                }
-                .catch { e ->
-                    Log.e("SearchViewModel", "❌ 검색 중 오류 발생: ${e.message}")
-                }
-                .collectLatest { results ->
-                    Log.d("SearchViewModel", "✅ 검색 결과 수신: ${results.size}개")
-                    _searchResults.value = results // ✅ 검색 결과 RecyclerView 업데이트
-                }
-        }
-    }
-
-    // ✅ 검색 기록 저장
     fun addSearchHistory(query: String) {
-        Log.d("SearchViewModel", "📜 검색 기록 추가: $query")
-
-        repository.saveSearchHistory(query, context) // ✅ 검색 기록 저장
-        loadSearchHistory() // ✅ 검색 기록 불러오기
-
-        Log.d("SearchViewModel", "📜 검색 기록 추가 후 상태: ${_searchHistory.value}")
+        repository.saveSearchHistory(query, context)
+        loadSearchHistory()
     }
 
     fun loadSearchHistory() {
-        Log.d("SearchViewModel", "📜 검색 기록 로드")
         _searchHistory.value = repository.getSearchHistory(context)
     }
 
-    fun deleteSearchQuery(query: String) {
-        Log.d("SearchViewModel", "🗑 검색 기록 삭제 요청: $query")
-        repository.deleteSearchHistory(query, context)  // 🔹 검색 기록 삭제
-        loadSearchHistory()  // 🔹 최신 검색 기록 로드
+    fun searchUsers(query: String) {
+        if (query.isBlank()) {
+            _userSuggestions.value = emptyList()
+            return
+        }
+
+        viewModelScope.launch {
+            repository.searchUsers(query)
+                .catch { e ->
+                    Log.e("SearchViewModel", "❌ 유저 검색 중 오류 발생: ${e.message}")
+                }
+                .collectLatest { users ->
+                    _userSuggestions.value = users.map { it.nickname ?: it.id.toString() }
+                }
+        }
     }
 
-    fun setSearchViewExpanded(expanded: Boolean) {
-        _isSearchViewExpanded.value = expanded
+    fun searchContent(query: String) {
+        if (query.isBlank()) return
+
+        viewModelScope.launch {
+            repository.searchContentRealtime(query)
+                .catch { e ->
+                    Log.e("SearchViewModel", "❌ 게시글 검색 중 오류 발생: ${e.message}")
+                }
+                .collectLatest { results ->
+                    Log.d("SearchViewModel", "🔎 Firestore 검색 결과: ${results.size}개") //  데이터 개수 확인
+                    results.forEach { Log.d("SearchViewModel", "📌 게시글: ${it.title}") }
+                    _searchResults.value = results
+                }
+        }
     }
+
+
 }

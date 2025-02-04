@@ -20,6 +20,7 @@ import com.piooda.data.model.Content
 import com.piooda.recycrew.core.ViewModelFactory
 import com.piooda.recycrew.databinding.ActivityInputBinding
 import com.piooda.recycrew.feature.community.viewmodel.QuestionViewModel
+import java.util.Date
 import java.util.UUID
 
 class InputActivity : AppCompatActivity() {
@@ -74,20 +75,38 @@ class InputActivity : AppCompatActivity() {
     private fun checkAndRequestPermissions() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (checkSelfPermission(android.Manifest.permission.READ_MEDIA_IMAGES) != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(arrayOf(android.Manifest.permission.READ_MEDIA_IMAGES), PERMISSION_REQUEST_CODE)
+                requestPermissions(
+                    arrayOf(android.Manifest.permission.READ_MEDIA_IMAGES),
+                    PERMISSION_REQUEST_CODE
+                )
             }
         } else {
             if (checkSelfPermission(android.Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE), PERMISSION_REQUEST_CODE)
+                requestPermissions(
+                    arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE),
+                    PERMISSION_REQUEST_CODE
+                )
             }
         }
     }
 
-    // ✅ 이미지 없이도 업로드 가능하게 수정
+    //  이미지 없이도 업로드 가능하게 수정
     private fun uploadImageAndCreatePost() {
         val title = binding.titleEdit.text.toString()
         val contentText = binding.contentEdit.text.toString()
         val category = binding.categoryEdit.text.toString()
+        fun generateSearchIndex(text: String): List<String> {
+            val indexList = mutableSetOf<String>()
+            val words = text.lowercase().split(" ")
+
+            words.forEach { word ->
+                for (i in 1..word.length) {
+                    indexList.add(word.substring(0, i)) // 🔥 부분 문자열 저장
+                }
+            }
+
+            return indexList.toList()
+        }
 
         if (title.isEmpty()) {
             Toast.makeText(this, "제목을 입력해주세요.", Toast.LENGTH_SHORT).show()
@@ -100,42 +119,48 @@ class InputActivity : AppCompatActivity() {
         }
 
         val currentUser = FirebaseAuth.getInstance().currentUser
-        val userId = currentUser?.uid ?: "UnknownUser"
-        val userName = currentUser?.displayName ?: "Anonymous"
+//        val userId = currentUser?.uid ?: "UnknownUser"
+        val userNames = currentUser?.displayName!!
 
-        // ✅ 이미지가 선택되지 않았을 경우, 텍스트만 업로드
+        //  이미지가 선택되지 않았을 경우, 텍스트만 업로드
         if (selectedImageUri == null) {
             val newContent = Content(
                 id = UUID.randomUUID().toString(),
+                nickname = userNames,
                 title = title,
                 content = contentText,
-                imagePath = "",  // ✅ 이미지가 없으므로 빈 문자열 저장
-                category = category,
-                commentCount = 0,
+                createdDate = Date(),
                 favoriteCount = 0,
-                viewCount = 0
+                commentCount = 0,
+                viewCount = 0,
+                searchIndex = generateSearchIndex("$title $contentText"), // 🔥 검색 인덱스 자동 생성
+                imagePath = ""  //  이미지가 없으므로 빈 문자열 저장
             )
+
             viewModel.insert(newContent)
             showToast("이미지 없이 게시글이 등록되었습니다.")
             finish()
             return
         }
 
-        // ✅ 이미지가 선택되었을 경우 Firebase Storage 업로드
-        val storageRef = Firebase.storage.reference.child("images/${System.currentTimeMillis()}.png")
+        //  이미지가 선택되었을 경우 Firebase Storage 업로드
+        val storageRef =
+            Firebase.storage.reference.child("images/${System.currentTimeMillis()}.png")
 
         storageRef.putFile(selectedImageUri!!)
             .addOnSuccessListener { taskSnapshot ->
                 storageRef.downloadUrl.addOnSuccessListener { downloadUrl ->
                     val newContent = Content(
                         id = UUID.randomUUID().toString(),
+                        nickname = userNames,
                         title = title,
                         content = contentText,
-                        imagePath = downloadUrl.toString(),  // ✅ 이미지 URL 저장
-                        category = category,
-                        commentCount = 0,
+                        createdDate = Date(),
                         favoriteCount = 0,
-                        viewCount = 0
+                        commentCount = 0,
+                        viewCount = 0,
+                        searchIndex = generateSearchIndex("$title $contentText"), // 🔥 검색 인덱스 자동 생성
+                        imagePath = ""  //  이미지가 없으므로 빈 문자열 저장
                     )
                     viewModel.insert(newContent)
                     showToast("게시글이 성공적으로 등록되었습니다.")

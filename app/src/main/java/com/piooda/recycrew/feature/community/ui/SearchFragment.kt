@@ -1,58 +1,64 @@
 package com.piooda.recycrew.feature.community.ui
 
-import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.View
-import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.widget.SearchView
-import androidx.core.os.bundleOf
-import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.chip.Chip
-import com.piooda.data.model.Content
-import com.piooda.recycrew.R
 import com.piooda.recycrew.core.BaseFragment
 import com.piooda.recycrew.core.ViewModelFactory
 import com.piooda.recycrew.databinding.FragmentSearchBinding
-import com.piooda.recycrew.feature.community.adapter.QuestionRecyclerAdapter
+import com.piooda.recycrew.feature.community.adapter.SearchRecyclerAdapter
 import com.piooda.recycrew.feature.community.viewmodel.SearchViewModel
 import kotlinx.coroutines.launch
 
 class SearchFragment : BaseFragment<FragmentSearchBinding>(FragmentSearchBinding::inflate) {
 
     private val viewModel: SearchViewModel by viewModels { ViewModelFactory(requireContext()) }
-    private val questionAdapter: QuestionRecyclerAdapter by lazy {
-        QuestionRecyclerAdapter(
-            onClick = ::navigateToDetailFragment,
-            onLikeClick = {}
+
+    private val searchAdapter: SearchRecyclerAdapter by lazy {
+        SearchRecyclerAdapter(
+            emptyList(),
+            emptyList(),
+            { content ->  //  게시글 클릭 이벤트
+                val action = SearchFragmentDirections.actionSearchFragmentToQuestionDetailFragment(content)
+                findNavController().navigate(action)
+            },
+            { username ->  //  유저 클릭 이벤트
+                Log.d("SearchFragment", "🔥 유저 클릭됨: $username")
+                val action = SearchFragmentDirections.actionSearchFragmentToUserProfileFragment()
+                findNavController().navigate(action)
+            }
         )
     }
 
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initializeComponents()
-        observeViewModelStates()
-    }
-
-    private fun initializeComponents() {
         setupSearchView()
         setupRecyclerView()
+        observeViewModel()
+    }
+
+    private fun setupRecyclerView() {
+        binding.recyclerView.apply {
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = searchAdapter
+        }
     }
 
     private fun setupSearchView() {
         binding.searchView.apply {
-            setIconifiedByDefault(false)
-            queryHint = "검색어를 입력하세요"
-
             setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String?): Boolean {
                     query?.let {
-                        performSearch(it)
+                        viewModel.searchContent(it) //  엔터 시 게시글 + 댓글 검색 실행
+                        viewModel.addSearchHistory(it)
                         clearFocus()
                     }
                     return true
@@ -60,112 +66,43 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(FragmentSearchBinding
 
                 override fun onQueryTextChange(newText: String?): Boolean {
                     newText?.let {
-                        if (it.isEmpty()) { clearSearchResults() }
-                        else { performSearch(it) }
+                        if (it.isNotEmpty()) {
+                            viewModel.searchUsers(it) //  입력 중에는 유저 자동완성 검색
+                        } else {
+                            searchAdapter.updateList(
+                                emptyList(),
+                                emptyList()
+                            ) // 🔹 입력이 없으면 자동완성 목록 비우기
+                        }
                     }
                     return true
                 }
             })
 
-            setOnCloseListener { clearFocus()
-                true
-            }
-
-            setOnQueryTextFocusChangeListener { view, hasFocus ->
-                if (hasFocus) {
-                    showKeyboard(view)
-                    clearSearchResults()
-                }
-            }
-
-            post { requestFocus()
-                showKeyboard(this)
+            setOnCloseListener {
+                searchAdapter.updateList(emptyList(), emptyList()) // 🔹 검색창 닫힐 때 자동완성 목록 초기화
+                false
             }
         }
     }
 
-    private fun showKeyboard(view: View) {
-        view.post {
-            val imm = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
-            imm?.showSoftInput(view.findFocus(), InputMethodManager.SHOW_IMPLICIT)
-        }
-    }
-
-    private fun setupRecyclerView() {
-        binding.recyclerView.apply {
-            layoutManager = LinearLayoutManager(requireContext())
-            adapter = questionAdapter
-        }
-    }
-
-    private fun observeViewModelStates() {
+    private fun observeViewModel() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch { observeSearchHistory() }
-                launch { observeSearchResults() }
-            }
-        }
-    }
-
-    private suspend fun observeSearchHistory() {
-        viewModel.searchHistory.collect { history ->
-            updateSearchHistoryChips(history)
-        }
-    }
-
-    private fun updateSearchHistoryChips(history: List<String>) {
-        binding.apply {
-            searchHistoryChipGroup.removeAllViews()
-            tvNoSearchHistory.isVisible = history.isEmpty()
-            searchHistoryChipGroup.isVisible = history.isNotEmpty()
-
-            history.forEach { query ->
-                createSearchHistoryChip(query)?.let { chip ->
-                    searchHistoryChipGroup.addView(chip)
+                launch {
+                    viewModel.searchResults.collect { results ->
+                        Log.d("UI", " RecyclerView 업데이트: ${results.size}개")
+                        searchAdapter.updateList(results, viewModel.userSuggestions.value)
+                    }
+                }
+                launch {
+                    viewModel.userSuggestions.collect { users ->
+                        Log.d("UI", " 유저 자동완성 업데이트: ${users.size}개")
+                        searchAdapter.updateList(viewModel.searchResults.value, users)
+                    }
                 }
             }
         }
     }
 
-    private fun createSearchHistoryChip(query: String) = Chip(requireContext()).apply {
-        text = query
-        isCloseIconVisible = true
-        setOnClickListener { handleSearchHistoryChipClick(query) }
-        setOnCloseIconClickListener { viewModel.deleteSearchQuery(query) }
-    }
-
-    private fun handleSearchHistoryChipClick(query: String) {
-        binding.searchView.setQuery(query, true)
-    }
-
-    private suspend fun observeSearchResults() {
-        viewModel.searchResults.collect { results ->
-            updateSearchResultsVisibility(results)
-        }
-    }
-
-    private fun updateSearchResultsVisibility(results: List<Content>) {
-        binding.apply {
-            tvNoSearchResults.isVisible = results.isEmpty()
-            recyclerView.isVisible = results.isNotEmpty()
-        }
-        questionAdapter.submitList(results)
-    }
-
-    private fun performSearch(query: String) {
-        viewModel.searchContent(query)
-        viewModel.addSearchHistory(query)
-    }
-
-    private fun clearSearchResults() {
-        viewModel.clearSearchResults()
-        questionAdapter.submitList(emptyList())
-        binding.tvNoSearchResults.isVisible = true
-        binding.recyclerView.isVisible = false
-    }
-
-    private fun navigateToDetailFragment(content: Content) {
-        val bundle = bundleOf("CONTENT_ID" to content.id)
-        findNavController().navigate(R.id.action_questionFragment_to_searchFragment, bundle)
-    }
 }

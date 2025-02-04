@@ -100,7 +100,6 @@
     </fragment>
     <action
         android:id="@+id/action_questionFragment_to_inputScreen"
-        app:destination="@id/inputScreen"
         tools:layout="@layout/activity_input" />
     <fragment
         android:id="@+id/categoriesDetailedImagesFragment"
@@ -115,6 +114,7 @@
         android:id="@+id/questionDetailFragment"
         android:name="com.piooda.recycrew.feature.community.ui.QuestionDetailFragment"
         android:label="fragment_question_detail"
+        android:windowSoftInputMode="adjustResize"
         tools:layout="@layout/fragment_question_detail">
         <argument
             android:name="detailedQuestPostData"
@@ -170,7 +170,18 @@
         android:id="@+id/searchFragment"
         android:name="com.piooda.recycrew.feature.community.ui.SearchFragment"
         android:label="검색"
-        tools:layout="@layout/fragment_search" />
+        tools:layout="@layout/fragment_search">
+        <action
+            android:id="@+id/action_searchFragment_to_questionDetailFragment"
+            app:destination="@id/questionDetailFragment" />
+        <action
+            android:id="@+id/action_searchFragment_to_userProfileFragment"
+            app:destination="@id/userProfileFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/userProfileFragment"
+        android:name="com.piooda.recycrew.feature.community.ui.UserProfileFragment"
+        android:label="UserProfileFragment" />
 
 </navigation>
 

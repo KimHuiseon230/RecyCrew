@@ -15,21 +15,21 @@ import com.piooda.recycrew.databinding.ItemCommunityPostBinding
 class QuestionRecyclerAdapter(
     private val onClick: (Content) -> Unit,
     private val onLikeClick: (Content) -> Unit
-) : ListAdapter<Content, QuestionRecyclerAdapter.ViewHolder>(DiffCallback())  {
+) : ListAdapter<Content, QuestionRecyclerAdapter.ViewHolder>(DiffCallback()) {
 
     class ViewHolder(
-    private val binding: ItemCommunityPostBinding,
-    private val onClick: (Content) -> Unit,
-    private val onLikeClick: (Content) -> Unit
+        private val binding: ItemCommunityPostBinding,
+        private val onClick: (Content) -> Unit,
+        private val onLikeClick: (Content) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: Content) {
+            binding.tvAuthor.text = item.nickname
             binding.tvTitle.text = item.title
             binding.tvDescription.text = item.content
             binding.tvCommentCount.text = item.commentCount.toString()
             binding.tvLikeCount.text = item.favoriteCount.toString()
 
-            // ✅ Firestore 데이터 반영 후 UI 갱신
             val isLiked = item.favorites.containsKey(FirebaseAuth.getInstance().currentUser?.uid)
             updateLikeButtonUI(isLiked)
 
@@ -59,12 +59,12 @@ class QuestionRecyclerAdapter(
                 else R.drawable.ic_baseline_favorite_24
             )
         }
-
     }
+
     class DiffCallback : DiffUtil.ItemCallback<Content>() {
         override fun areItemsTheSame(oldItem: Content, newItem: Content): Boolean {
             val result = oldItem.id == newItem.id
-            Log.d("DiffCallback", "areItemsTheSame 호출: $result")
+            Log.d("QuestionRecyclerAdapter", "[DiffCallback]areItemsTheSame 호출: $result")
             return result
         }
 
@@ -73,13 +73,14 @@ class QuestionRecyclerAdapter(
             val result = oldItem.favoriteCount == newItem.favoriteCount &&
                     oldItem.favorites.size == newItem.favorites.size &&
                     oldItem.favorites == newItem.favorites
-            Log.d("DiffCallback", "areContentsTheSame 호출: $result")
+            Log.d("QuestionRecyclerAdapter", "[DiffCallback]areContentsTheSame 호출: $result")
             return result
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding = ItemCommunityPostBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding =
+            ItemCommunityPostBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding, onClick, onLikeClick)
     }
 

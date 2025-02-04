@@ -12,9 +12,9 @@ import com.google.firebase.storage.storage
 import com.piooda.data.datasource.remote.PreferenceDataStoreManager
 import com.piooda.data.repository.FirebaseImageDataRepository
 import com.piooda.data.repository.SearchRepository
-import com.piooda.data.repository.SearchRepositoryImpl
 import com.piooda.data.repository.question.ContentRepository
 import com.piooda.data.repositoryImpl.ContentRepositoryImpl
+import com.piooda.data.repositoryImpl.SearchRepositoryImpl
 import com.piooda.data.repositoryImpl.attendencecheck.AttendanceCheckRepositoryImpl
 import com.piooda.data.repositoryImpl.mypage.MyPageRepositoryImpl
 import com.piooda.data.repositoryImpl.mypage.detail.editprofile.EditProfileRepositoryImpl
@@ -66,8 +66,8 @@ class ViewModelFactory(private val context: Context) : ViewModelProvider.Factory
             }
 
             modelClass.isAssignableFrom(SearchViewModel::class.java) -> {
-                Log.d("ViewModelFactory", "✅ SearchViewModel 생성됨")  // ✅ 로그 추가
-                return SearchViewModel(searchRepository, context) as T  // ✅ Context 전달
+                Log.d("ViewModelFactory", " SearchViewModel 생성됨")  //  로그 추가
+                return SearchViewModel(searchRepository, context) as T  //  Context 전달
             }
 
             modelClass.isAssignableFrom(QuestionViewModel::class.java) ->

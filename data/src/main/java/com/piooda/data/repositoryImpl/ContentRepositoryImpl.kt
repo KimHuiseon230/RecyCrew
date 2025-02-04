@@ -15,7 +15,7 @@ import kotlinx.coroutines.tasks.await
 class ContentRepositoryImpl(
     private val db: FirebaseFirestore,
     private val firebaseStorage: FirebaseStorage,
-) : ContentRepository { // ✅ 인터페이스 구현 추가
+) : ContentRepository { //  인터페이스 구현 추가
     private val postsCollection = db.collection("content")
 
     // 🔹 게시글 목록 가져오기 (Flow 사용)
@@ -33,49 +33,63 @@ class ContentRepositoryImpl(
         awaitClose { listener.remove() }
     }
 
+    private fun generateSearchIndex(text: String): List<String> {
+        val indexList = mutableListOf<String>()
+        text.lowercase().split(" ").forEach { word ->
+            for (i in 1..word.length) {
+                indexList.add(word.substring(0, i))
+            }
+        }
+        return indexList
+    }
 
-    // ✅ 게시글 추가 (ID 자동 생성 및 searchIndex 저장)
     override suspend fun insert(content: Content): Boolean = try {
-        val searchIndex = listOf(content.title, content.content)  // 🔥 검색어 인덱스 생성
-            .flatMap { it.split(" ") }  // 띄어쓰기 기준으로 단어 분리
-            .map { it.lowercase() }  // 🔥 소문자로 변환
+        val searchIndex = generateSearchIndex("${content.title} ${content.content}") // 🔥 검색 인덱스 생성
 
         val postRef = postsCollection.document()
-        postRef.set(content.copy(id = postRef.id).apply {
-            // 🔥 searchIndex 필드 추가
-            val data = this.toMap().toMutableMap()
-            data["searchIndex"] = searchIndex
-            postRef.set(data).await()
-        })
+        val postData = content.copy(id = postRef.id).toMap().toMutableMap().apply {
+            this["searchIndex"] = searchIndex // 🔹 검색 인덱스 필드 추가
+        }
 
-        Log.d("Firestore", "✅ 게시글 저장 완료! ID: ${postRef.id}, SearchIndex: $searchIndex")
+        postRef.set(postData).await()
+
+        Log.d("Firestore", " 게시글 저장 완료! ID: ${postRef.id}, SearchIndex: $searchIndex")
         true
     } catch (e: Exception) {
         Log.e("Firestore", "❌ 게시글 저장 오류: ${e.message}")
         false
     }
 
-
-
-    // 🔥 3. 게시글 업데이트 (ID 필요)
     override suspend fun update(content: Content): Boolean {
         return try {
             val postRef = FirebaseFirestore.getInstance()
                 .collection("content")
                 .document(content.id ?: return false)
 
-            // ✅ Firestore에서 현재 데이터 로드 후 +1 (동시성 처리 개선)
+            //  Firestore에서 현재 데이터 로드
             val snapshot = postRef.get().await()
             val currentLikeCount = snapshot.getLong("likeCount")?.toInt() ?: 0
 
-            // ✅ Firestore에 정확한 값 업데이트
-            postRef.update("likeCount", currentLikeCount + 1).await()
+            // 🔥 새롭게 검색 인덱스를 생성 (title, content 기반)
+            val updatedSearchIndex = generateSearchIndex("${content.title} ${content.content}")
+
+            //  Firestore에 업데이트할 데이터 맵 생성
+            val updateData = mutableMapOf<String, Any>(
+                "likeCount" to currentLikeCount + 1, // 좋아요 수 증가
+                "searchIndex" to updatedSearchIndex  // 🔥 검색 인덱스 업데이트
+            )
+
+            //  Firestore에 업데이트 실행
+            postRef.update(updateData).await()
+
+            Log.d("Firestore", " 게시글 업데이트 완료! ID: ${content.id}, SearchIndex: $updatedSearchIndex")
             true
         } catch (e: Exception) {
-            Log.e("ContentUseCase", "Failed to update content: ${e.message}")
+            Log.e("ContentUseCase", "❌ 게시글 업데이트 실패: ${e.message}")
             false
         }
     }
+
 
     // 🔥 4. 게시글 삭제 (ID 필요)
     override suspend fun delete(postId: String?): Boolean = try {
@@ -87,7 +101,7 @@ class ContentRepositoryImpl(
         false
     }
 
-    // ✅ 댓글 불러오기 (Firestore)
+    //  댓글 불러오기 (Firestore)
     override suspend fun getCommentsForPost(postId: String): Flow<List<Content.Comment>> = callbackFlow {
         val listener = postsCollection.document(postId)
             .collection("comments")
@@ -101,7 +115,7 @@ class ContentRepositoryImpl(
         awaitClose { listener.remove() }
     }
 
-    // ✅ 댓글 추가 (Firestore)
+    //  댓글 추가 (Firestore)
     override suspend fun addCommentToPost(postId: String, comment: Content.Comment) {
         try {
             postsCollection.document(postId)

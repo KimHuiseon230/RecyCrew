@@ -9,4 +9,6 @@ interface SearchRepository {
     fun deleteSearchHistory(query: String, context: Context)
     fun getSearchHistory(context: Context): List<String>
     fun searchContentRealtime(query: String): Flow<List<Content>>
+    fun searchUsers(query: String): Flow<List<Content>>
+    fun searchAll(query: String): Flow<List<Content>>
 }

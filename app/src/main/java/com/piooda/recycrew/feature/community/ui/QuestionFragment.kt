@@ -88,7 +88,7 @@ class QuestionFragment : BaseFragment<FragmentQuestionBinding>(FragmentQuestionB
                             }
 
                             is UiState.Success -> {
-                                Log.d("UI State", "데이터 로드 완료 ✅")
+                                Log.d("UI State", "데이터 로드 완료 ")
                                 if (state.resultData.isEmpty()) {
                                     viewModel.setUiState(UiState.Empty) // 🔥 성공했지만 데이터가 없으면 Empty 상태로 변경
                                 } else {
