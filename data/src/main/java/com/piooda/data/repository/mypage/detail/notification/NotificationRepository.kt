@@ -1,7 +1,7 @@
 package com.piooda.data.repository.mypage.detail.notification
 
 
-import com.piooda.recycrew.common.UiState
+import com.piooda.UiState
 import kotlinx.coroutines.flow.Flow
 
 interface NotificationRepository {

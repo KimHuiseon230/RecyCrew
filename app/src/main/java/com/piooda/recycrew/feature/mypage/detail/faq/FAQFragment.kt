@@ -8,11 +8,11 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import com.piooda.recycrew.R
-import com.piooda.recycrew.common.UiState
-import com.piooda.recycrew.core_ui.base.BaseFragment
-import com.piooda.recycrew.core_ui.base.ViewModelFactory
-import com.piooda.recycrew.core_ui.util.logDebug
-import com.piooda.recycrew.core_ui.util.logError
+import com.piooda.UiState
+import com.piooda.recycrew.core.BaseFragment
+import com.piooda.recycrew.core.ViewModelFactory
+import com.piooda.recycrew.core.util.logDebug
+import com.piooda.recycrew.core.util.logError
 import com.piooda.recycrew.databinding.FragmentFaqBinding
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch

@@ -7,9 +7,9 @@
 
     <fragment
         android:id="@+id/myPageFragment"
-        android:name="com.piooda.recycrew.feature.mypage.MyPageFragment"
+        android:name="com.piooda.recycrew.feature.mypage.ui.MyPageFragment"
         android:label="fragment_my_page"
-        tools:layout="@layout/fragment_mypage" >
+        tools:layout="@layout/fragment_mypage">
         <action
             android:id="@+id/action_myPageFragment_to_FAQFragment"
             app:destination="@id/FAQFragment" />
@@ -23,49 +23,36 @@
             android:id="@+id/action_myPageFragment_to_editProfileFragment"
             app:destination="@id/editProfileFragment" />
     </fragment>
-    <fragment
-        android:id="@+id/tradeFragment"
-        android:name="com.piooda.recycrew.feature.community.trade.TradeFragment"
-        android:label="fragment_trade"
-        tools:layout="@layout/fragment_trade" />
+
     <fragment
         android:id="@+id/attendanceCheckFragment"
-        android:name="com.piooda.recycrew.feature.event.attendanceCheck.AttendanceCheckFragment"
+        android:name="com.piooda.recycrew.feature.event.ui.AttendanceCheckFragment"
         android:label="fragment_attendance_check"
-        tools:layout="@layout/fragment_calendar" >
+        tools:layout="@layout/fragment_calendar">
         <action
             android:id="@+id/action_attendanceCheckFragment_to_myPageFragment"
             app:destination="@id/myPageFragment" />
     </fragment>
-    <fragment
-        android:id="@+id/chatFragment"
-        android:name="com.piooda.recycrew.feature.chat.ChatFragment"
-        android:label="fragment_chat"
-        tools:layout="@layout/fragment_chat" />
+
     <fragment
         android:id="@+id/communityFragment"
-        android:name="com.piooda.recycrew.feature.community.CommunityFragment"
+        android:name="com.piooda.recycrew.feature.community.ui.CommunityFragment"
         android:label="fragment_community"
         tools:layout="@layout/fragment_community">
         <action
             android:id="@+id/action_questionFragment_to_questionDetailFragment"
             app:destination="@id/questionDetailFragment" />
         <action
-            android:id="@+id/action_communityFragment_to_tradeFragment"
-            app:destination="@id/tradeFragment" />
-        <action
             android:id="@+id/action_communityFragment_to_questionFragment"
             app:destination="@id/questionFragment" />
+
         <action
-            android:id="@+id/action_communityFragment_to_meetUpFragment"
-            app:destination="@id/meetUpFragment" />
-        <action
-            android:id="@+id/action_communityFragment_to_chatFragment"
-            app:destination="@id/chatFragment" />
+            android:id="@+id/action_communityFragment_to_searchFragment"
+            app:destination="@id/searchFragment" />
     </fragment>
     <fragment
         android:id="@+id/eventFragment"
-        android:name="com.piooda.recycrew.feature.event.EventFragment"
+        android:name="com.piooda.recycrew.feature.event.ui.EventFragment"
         android:label="fragment_event"
         tools:layout="@layout/fragment_event">
         <action
@@ -74,7 +61,7 @@
     </fragment>
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.piooda.recycrew.feature.home.HomeFragment"
+        android:name="com.piooda.recycrew.feature.home.ui.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home">
         <action
@@ -94,30 +81,29 @@
                 app:argType="com.piooda.data.model.DetailedImageData" />
         </action>
     </fragment>
-    <fragment
-        android:id="@+id/meetUpFragment"
-        android:name="com.piooda.recycrew.feature.community.meetup.MeetUpFragment"
-        android:label="fragment_meet_up"
-        tools:layout="@layout/fragment_meet_up" />
+
     <fragment
         android:id="@+id/questionFragment"
-        android:name="com.piooda.recycrew.feature.community.question.QuestionFragment"
+        android:name="com.piooda.recycrew.feature.community.ui.QuestionFragment"
         android:label="fragment_question"
-        tools:layout="@layout/fragment_question" >
+        tools:layout="@layout/fragment_question">
         <action
             android:id="@+id/action_questionFragment_to_questionDetailFragment"
-            app:destination="@id/questionDetailFragment" />
-        <argument
-            android:name="detailedQuestData"
-            app:argType="com.piooda.data.model.PostData" />
+            app:destination="@id/questionDetailFragment">
+            <argument
+                android:name="detailedQuestPostData"
+                app:argType="com.piooda.data.model.Content" />
+        </action>
+        <action
+            android:id="@+id/action_questionFragment_to_searchFragment"
+            app:destination="@id/searchFragment" />
     </fragment>
     <action
         android:id="@+id/action_questionFragment_to_inputScreen"
-        app:destination="@id/inputScreen"
         tools:layout="@layout/activity_input" />
     <fragment
         android:id="@+id/categoriesDetailedImagesFragment"
-        android:name="com.piooda.recycrew.feature.home.CategoriesDetailedImagesFragment"
+        android:name="com.piooda.recycrew.feature.home.ui.CategoriesDetailedImagesFragment"
         tools:layout="@layout/fragment_categories_detailed_images">
 
         <argument
@@ -126,28 +112,29 @@
     </fragment>
     <fragment
         android:id="@+id/questionDetailFragment"
-        android:name="com.piooda.recycrew.feature.community.question.QuestionDetailFragment"
+        android:name="com.piooda.recycrew.feature.community.ui.QuestionDetailFragment"
         android:label="fragment_question_detail"
+        android:windowSoftInputMode="adjustResize"
         tools:layout="@layout/fragment_question_detail">
         <argument
-            android:name="detailedQuestData"
-            app:argType="com.piooda.data.model.PostData" />
+            android:name="detailedQuestPostData"
+            app:argType="com.piooda.data.model.Content" />
     </fragment>
     <fragment
         android:id="@+id/FAQFragment"
         android:name="com.piooda.recycrew.feature.mypage.detail.faq.FAQFragment"
         android:label="FAQFragment"
-        tools:layout="@layout/fragment_faq"/>
+        tools:layout="@layout/fragment_faq" />
     <fragment
         android:id="@+id/noticeFragment"
         android:name="com.piooda.recycrew.feature.mypage.detail.notice.NoticeFragment"
         android:label="NoticeFragment"
-        tools:layout="@layout/fragment_notice"/>
+        tools:layout="@layout/fragment_notice" />
     <fragment
         android:id="@+id/notificationFragment"
         android:name="com.piooda.recycrew.feature.mypage.detail.notification.NotificationFragment"
         android:label="NotificationFragment"
-        tools:layout="@layout/fragment_settingnotification"/>
+        tools:layout="@layout/fragment_settingnotification" />
     <fragment
         android:id="@+id/editProfileFragment"
         android:name="com.piooda.recycrew.feature.mypage.detail.editprofile.EditProfileFragment"
@@ -177,8 +164,24 @@
         android:id="@+id/authActivity"
         android:name="com.piooda.recycrew.feature.auth.AuthActivity"
         android:label="AuthActivity"
-        tools:layout="@layout/activity_auth"/>
+        tools:layout="@layout/activity_auth" />
 
+    <fragment
+        android:id="@+id/searchFragment"
+        android:name="com.piooda.recycrew.feature.community.ui.SearchFragment"
+        android:label="검색"
+        tools:layout="@layout/fragment_search">
+        <action
+            android:id="@+id/action_searchFragment_to_questionDetailFragment"
+            app:destination="@id/questionDetailFragment" />
+        <action
+            android:id="@+id/action_searchFragment_to_userProfileFragment"
+            app:destination="@id/userProfileFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/userProfileFragment"
+        android:name="com.piooda.recycrew.feature.community.ui.UserProfileFragment"
+        android:label="UserProfileFragment" />
 
 </navigation>
 

@@ -4,7 +4,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.piooda.data.repository.mypage.MyPageRepository
 import com.piooda.data.model.UserProfile
 import com.google.firebase.firestore.FirebaseFirestore
-import com.piooda.recycrew.common.UiState
+import com.piooda.UiState
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow

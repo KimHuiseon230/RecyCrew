@@ -1,9 +1,9 @@
 package com.piooda.data.repositoryImpl.mypage.detail.notification
 
-import com.piooda.data.datastore.PreferenceDataStoreConstants
-import com.piooda.data.datastoreimpl.PreferenceDataStoreManager
+import com.piooda.data.datasource.remote.PreferenceDataStoreConstants
+import com.piooda.data.datasource.remote.PreferenceDataStoreManager
 import com.piooda.data.repository.mypage.detail.notification.NotificationRepository
-import com.piooda.recycrew.common.UiState
+import com.piooda.UiState
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow

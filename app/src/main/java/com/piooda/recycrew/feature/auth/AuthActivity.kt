@@ -13,7 +13,7 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
 import com.piooda.recycrew.R
-import com.piooda.recycrew.core_ui.base.AttendanceCheckApplication
+import com.piooda.recycrew.core.AttendanceCheckApplication
 import com.piooda.recycrew.databinding.ActivityAuthBinding
 import com.piooda.recycrew.feature.MainActivity
 

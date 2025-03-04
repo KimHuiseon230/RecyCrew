@@ -3,7 +3,7 @@ package com.piooda.recycrew.feature.mypage.detail.notification
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.piooda.data.repository.mypage.detail.notification.NotificationRepository
-import com.piooda.recycrew.common.UiState
+import com.piooda.UiState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

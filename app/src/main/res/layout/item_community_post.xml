@@ -74,25 +74,44 @@
         android:id="@+id/flowActions"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:constraint_referenced_ids="tvCommentCount,tvLikeCount"
-        app:flow_horizontalGap="8dp"
+        app:constraint_referenced_ids="icComment, tvCommentCount, icLike, tvLikeCount"
         app:flow_wrapMode="none" />
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/icComment"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:src="@drawable/ic_baseline_comment_24" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/tvCommentCount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:drawableLeft="@drawable/ic_baseline_comment_24"
-        android:drawablePadding="4dp"
+        android:layout_marginStart="4dp"
         android:text="@string/community_text_count"
-        android:textColor="@color/Primary_Color" />
+        android:textColor="@color/Primary_Color"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/tvLikeCount"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/icLike"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:src="@drawable/ic_baseline_favorite_24"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/tvLikeCount"
+        app:layout_constraintStart_toEndOf="@+id/tvCommentCount"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/tvLikeCount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:drawableLeft="@drawable/ic_baseline_favorite_24"
+        android:layout_marginStart="4dp"
         android:text="@string/community_text_count"
-        android:textColor="@color/red" />
+        android:textColor="@color/red"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/tvCommentCount"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

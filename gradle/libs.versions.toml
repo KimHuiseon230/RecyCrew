@@ -35,6 +35,7 @@ materialCalendarView = "1.9.2"
 legacySupportV4 = "1.0.0"
 devTools = "1.9.24-1.0.20"
 lifecycleViewmodelAndroid = "2.8.6"
+ksp = "1.9.23-1.0.20"
 
 
 
@@ -75,11 +76,12 @@ android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 google-services = { id = "com.google.gms.google-services", version.ref = "google-services" }
 android-library = { id = "com.android.library", version.ref = "agp" }
-org-jetbrains-kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "org-jetbrains-kotlin-android" }
+#org-jetbrains-kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "org-jetbrains-kotlin-android" }
 jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "jetbrainsKotlinJvm" }
 androidx-navigation-safe-args = { id = "androidx.navigation.safeargs.kotlin", version.ref = "androidxNavigationSafeargsGradlePlugin" }
 kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "parcelize" }
-devtools = { id = "com.google.devtools.ksp", version.ref = "devTools" }
+#devtools = { id = "com.google.devtools.ksp", version.ref = "devTools" }
+kotlinAndroidKsp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 
 
 
