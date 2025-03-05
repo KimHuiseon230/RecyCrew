@@ -77,6 +77,7 @@ dependencies {
     implementation(libs.androidx.storage)
     implementation(libs.firebase.storage.ktx)
     implementation(libs.google.firebase.firestore)
+    implementation(libs.androidx.lifecycle.runtime.compose.android)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -99,6 +100,9 @@ dependencies {
     implementation(libs.androidx.activity.compose)
     implementation("androidx.compose.material3:material3:${libs.versions.material3.get()}")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:${libs.versions.lifecycleViewmodelCompose.get()}")
+    implementation("io.coil-kt:coil-compose:${libs.versions.coil.get()}")
+
+
     implementation(project(":data"))
     implementation(project(":common"))
     tasks.register("prepareKotlinBuildScriptModel") {}
