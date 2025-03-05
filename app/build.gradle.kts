@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.compose.compiler)
     alias(libs.plugins.google.services)
     alias(libs.plugins.kotlinAndroidKsp)
     alias(libs.plugins.androidx.navigation.safe.args)
@@ -49,6 +50,10 @@ android {
     buildFeatures {
         viewBinding = true
         buildConfig = true
+        compose = true // Compose 활성화
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.3" // 최신 버전 적용
     }
 }
 
@@ -87,6 +92,13 @@ dependencies {
     annotationProcessor(libs.compiler)
     implementation(libs.androidx.legacy.support.v4)
 
+    implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.compose.ui)
+    implementation(libs.androidx.compose.ui.tooling)
+    implementation(libs.androidx.compose.material)
+    implementation(libs.androidx.activity.compose)
+    implementation("androidx.compose.material3:material3:${libs.versions.material3.get()}")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:${libs.versions.lifecycleViewmodelCompose.get()}")
     implementation(project(":data"))
     implementation(project(":common"))
     tasks.register("prepareKotlinBuildScriptModel") {}
