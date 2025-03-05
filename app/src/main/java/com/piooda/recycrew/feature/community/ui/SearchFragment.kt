@@ -31,8 +31,8 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(FragmentSearchBinding
             },
             { username ->  //  유저 클릭 이벤트
                 Log.d("SearchFragment", "🔥 유저 클릭됨: $username")
-                val action = SearchFragmentDirections.actionSearchFragmentToUserProfileFragment()
-                findNavController().navigate(action)
+//                val action = SearchFragmentDirections.actionSearchFragmentToUserProfileFragment()
+//                findNavController().navigate(action)
             }
         )
     }

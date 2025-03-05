@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.storage.FirebaseStorage
 import com.piooda.UiState
 import com.piooda.data.model.Content
 import com.piooda.data.repository.question.ContentRepository
@@ -16,6 +17,7 @@ import kotlinx.coroutines.launch
 
 class QuestionViewModel(
     private val repository: ContentRepository,
+    storage: FirebaseStorage,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow<UiState<List<Content>>>(UiState.Loading)

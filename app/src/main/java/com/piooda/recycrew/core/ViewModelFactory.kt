@@ -47,6 +47,7 @@ class ViewModelFactory(private val context: Context) : ViewModelProvider.Factory
 
     private val repository: ContentRepository by lazy { provideContentRepository() }
 
+    val storage = Firebase.storage
     private val searchRepository: SearchRepository by lazy {
         SearchRepositoryImpl(firestore)
     }
@@ -71,7 +72,7 @@ class ViewModelFactory(private val context: Context) : ViewModelProvider.Factory
             }
 
             modelClass.isAssignableFrom(QuestionViewModel::class.java) ->
-                QuestionViewModel(repository) as T
+                QuestionViewModel(repository, storage) as T
 
             modelClass.isAssignableFrom(NoticeViewModel::class.java) ->
                 NoticeViewModel(
@@ -104,6 +105,7 @@ class ViewModelFactory(private val context: Context) : ViewModelProvider.Factory
                     EditProfileRepositoryImpl(firestore, storage)
                 ) as T
             }
+
 
             modelClass.isAssignableFrom(AttendanceCheckViewModel::class.java) ->
                 AttendanceCheckViewModel(
