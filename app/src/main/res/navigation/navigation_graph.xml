@@ -174,14 +174,6 @@
         <action
             android:id="@+id/action_searchFragment_to_questionDetailFragment"
             app:destination="@id/questionDetailFragment" />
-        <action
-            android:id="@+id/action_searchFragment_to_userProfileFragment"
-            app:destination="@id/userProfileFragment" />
     </fragment>
-    <fragment
-        android:id="@+id/userProfileFragment"
-        android:name="com.piooda.recycrew.feature.community.ui.UserProfileFragment"
-        android:label="UserProfileFragment" />
-
 </navigation>
 
